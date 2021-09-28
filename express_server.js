@@ -64,11 +64,17 @@ app.get("/urls/:shortURL", (req, res) => {
   res.render("urls_show", templateVars);
 });
 
+app.post("/urls/:id", (req, res) => {
+  const shortURLId = req.params.id;
+  const longURL = req.body.longURL;
+  urlDatabase[shortURLId] = req.body.longURL;
+  console.log('shortURLID',shortURLId,'NewLongURL',longURL )
+  res.redirect("/urls")
+});
+
 app.post("/urls/:shortURL/delete", (req, res) => {
-  //POST /urls/:shortURL/delete
   const { shortURL } = req.params;
   delete urlDatabase[shortURL];
-  // console.log(urlDatabase)
   res.redirect("/urls");
 });
 
