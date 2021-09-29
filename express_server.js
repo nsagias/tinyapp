@@ -3,7 +3,7 @@ const app = express();
 const PORT = 8080;
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
-const uuid = require("uuid/v4");
+const uuid = require("uuid");
 
 
 app.use(morgan('short'));
@@ -16,18 +16,25 @@ const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 
-const generateRandomString = (setStringLength = 6) => {
-  const characters =
-  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  const length = setStringLength;
-  let randomString = "";
+const generateRandomString = () => {
+  return uuid.v4().substring(0,6)
+};
 
-  for (let i = 0; i < length; i++) {
-    const randomNum = Math.floor(Math.random() * characters.length);
-    randomString += characters[randomNum];
+
+const users = { 
+  "4c7b35": {
+    id: "4c7b35", 
+    email: "purgle1@example.com", 
+    password: "purple"
+  },
+ "cb7bc8": {
+    id: "cb7bc8", 
+    email: "green@example.com", 
+    password: "green"
   }
-  return randomString;
 }
+
+
 
 let urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
@@ -54,16 +61,12 @@ app.get("/urls",(req, res)=>{
 
 app.post("/urls", (req, res) => {
   const shortURLId = generateRandomString();
-  // urlDatabase[shortURLId] = `http://${req.body.longURL}`;
-  // const longURL = req.body.longURL
-  // urlDatabase[shortURLId] = longURL;
   urlDatabase[shortURLId] = req.body.longURL;
   res.redirect("/urls");  
 });
 
 app.get("/u/:shortURL", (req, res) => {
   const longURL = urlDatabase[req.params.shortURL];
-  // console.log(urlDatabase[req.params.shortURL]);
   res.redirect(longURL);
 });
 
@@ -86,7 +89,7 @@ app.post("/urls/:id", (req, res) => {
   const shortURLId = req.params.id;
   const longURL = req.body.longURL;
   urlDatabase[shortURLId] = req.body.longURL;
-  console.log('shortURLID',shortURLId,'NewLongURL',longURL )
+  console.log('shortURLID',shortURLId,'NewLongURL',longURL);
   res.redirect("/urls")
 });
 
@@ -99,25 +102,20 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 
 
 app.post("/login", (req, res) => {
-  // Cookies that have not been signed
-  console.log('body',req.body.username)
-  
-  res.cookie('username', req.body.username)
-  // res.clearCookie('name')
-
+  console.log('body',req.body.username);
+  res.cookie('username', req.body.username);
   res.redirect("/urls");
 });
 
 app.post("/logout", (req, res) => {
-  // Cookies that have not been signed
-  console.log('body',req.body.username)
+  console.log('body',req.body.username);
   res.clearCookie('username')
   res.redirect("/urls");
 });
 
 
 app.get("/register", (req, res) => {
-  const templateVars = { username: req.cookies["username"]};
+  const templateVars = {username: req.cookies["username"]};
   res.render("register", templateVars);
 });
 
