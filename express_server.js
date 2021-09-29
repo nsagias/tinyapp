@@ -20,17 +20,27 @@ const generateRandomString = () => {
   return uuid.v4().substring(0,6)
 };
 
+const userId = () => {
+  return uuid.v4().substring(0,8)
+};
+
+
 
 const users = { 
-  "4c7b35": {
-    id: "4c7b35", 
-    email: "purgle1@example.com", 
-    password: "purple"
+  "'815bd08a": {
+    id: "'815bd08a", 
+    email: "red1@example.com", 
+    password: "red"
   },
- "cb7bc8": {
-    id: "cb7bc8", 
+  "ec3bdf7a": {
+    id: "ec3bdf7a", 
     email: "green@example.com", 
     password: "green"
+  },
+  "1f1ffea1": {
+    id: "1f1ffea1", 
+    email: "blue@example.com", 
+    password: "blue"
   }
 }
 
