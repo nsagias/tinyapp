@@ -2,6 +2,8 @@ const express = require("express");
 const app = express();
 const PORT = 8080;
 const morgan = require('morgan');
+const cookieParser = require('cookie-parser');
+
 
 app.use(morgan('short'));
 
@@ -82,6 +84,20 @@ app.post("/urls/:shortURL/delete", (req, res) => {
   delete urlDatabase[shortURL];
   res.redirect("/urls");
 });
+
+
+// curl -X POST -i localhost:8080/login -d "username=vanillaice"
+app.post("/login", (req, res) => {
+  // Cookies that have not been signed
+  console.log('body',req.body.username)
+ 
+  res.cookie('name', req.body.username)
+
+  res.redirect("/urls");
+});
+
+
+
 
 
 app.get("/urls.json",(req, res)=>{
