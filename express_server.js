@@ -6,6 +6,8 @@ const cookieParser = require('cookie-parser');
 
 
 app.use(morgan('short'));
+app.use(cookieParser())
+
 
 const bodyParser = require("body-parser");
 
@@ -40,7 +42,12 @@ app.get("/hello",(req, res)=>{
 });
 
 app.get("/urls",(req, res)=>{
-  const templateVars = { urls: urlDatabase}
+  // console.log(req.cookies["username"]
+  const templateVars = { 
+    username: req.cookies["username"],
+    urls: urlDatabase
+  }
+  console.log('templateVars:',templateVars)
   res.render('urls_index', templateVars);
 });
 
@@ -60,11 +67,14 @@ app.get("/u/:shortURL", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
-  res.render("urls_new");
+  const templateVars = { username: req.cookies["username"]};
+  res.render("urls_new", templateVars);
 });
 
 app.get("/urls/:shortURL", (req, res) => {
+ 
   const templateVars = { 
+    username: req.cookies["username"],
     shortURL: req.params.shortURL, 
     longURL: urlDatabase[req.params.shortURL]
   };
@@ -86,15 +96,24 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 });
 
 
-// curl -X POST -i localhost:8080/login -d "username=vanillaice"
+
 app.post("/login", (req, res) => {
   // Cookies that have not been signed
   console.log('body',req.body.username)
- 
-  res.cookie('name', req.body.username)
+  
+  res.cookie('username', req.body.username)
+  // res.clearCookie('name')
 
   res.redirect("/urls");
 });
+
+app.post("/logout", (req, res) => {
+  // Cookies that have not been signed
+  console.log('body',req.body.username)
+  res.clearCookie('username')
+  res.redirect("/urls");
+});
+
 
 
 
