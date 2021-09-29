@@ -3,10 +3,11 @@ const app = express();
 const PORT = 8080;
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
+const uuid = require("uuid/v4");
 
 
 app.use(morgan('short'));
-app.use(cookieParser())
+app.use(cookieParser());
 
 
 const bodyParser = require("body-parser");
