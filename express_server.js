@@ -19,6 +19,23 @@ const userId = () => {
   return uuid.v4().substring(0,8)
 };
 
+const findUserByEmail = (userEmail, usersDB) => {
+
+  for (let user in usersDB) {
+    if (usersDB[user].email === userEmail) {  
+      return true;
+    } 
+  }
+  return false;
+}
+const newUser = (id, name, email, password, userDB) => {
+  return userDB[id] = {
+    id:  id,
+    name: name,
+    email: email,
+    password: password
+  };
+}
 
 
 const users = { 
@@ -133,24 +150,23 @@ app.post("/register", (req, res) => {
   const id = userId();
   const user_id = id;
   const { name, email, password } = req.body;
+  
+  // check if email or password are empty strings
   if (email ==='' || password ==='') {
     return res.status(400).send('400: Missing Email or Password ');
   }
- 
-  for (let user in users) {
-    if (users[user].email === email) {  
-      return res.status(400).send('400: Already Exists');
-    } 
-  }
   
-  users[id] = {
-    id:  id,
-    name: name,
-    email: email,
-    password: password
-  }
-
-  console.log(users)
+  // check if is a current user 
+  const usersDB = users;
+  const isCurrentUser = findUserByEmail(email, usersDB);
+  if (isCurrentUser) {  
+    return res.status(400).send('400: Already Exists');
+  } 
+  
+  // add new user to db
+  newUser(id, name, email, password, usersDB);
+  
+  console.log(users);
   res.cookie('user_id', user_id);
   // res.send('ok');
   res.redirect("urls");
