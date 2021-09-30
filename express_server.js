@@ -135,6 +135,16 @@ app.post("/register", (req, res) => {
   const name = req.body.name;
   const email = req.body.email;
   const password = req.body.password;
+  if (email ==='' || password ==='') {
+    return res.status(400).send('400: Missing Email or Password ');
+  }
+ 
+  for (let user in users) {
+    if (users[user].email === email) {  
+      return res.status(400).send('400: Already Exists');
+    } 
+  }
+  
   users[id] = {
     id:  id,
     name: name,
