@@ -53,38 +53,30 @@ const users = {
     password: "blue"
   }
 };
-// stretch
-// let urlDatabase2 = {
-//   "b2xVn2": {
-//     url_id:"b2xVn2",
-//     url: "http://www.lighthouselabs.ca",
-//     user_id: "1f1ffea1",
-//     count: 0
-//   },
-//   "9sm5xk": {
-//     url_id:"9sm5xk",
-//     url: "http://www.google.com",
-//     user_id: "1f1ffea1",
-//     count: 0
-//   },
-//   "9sm511": {
-//     url_id: "9sm511",
-//     url: "http://www.bingo.com",
-//     user_id: "815bd08a",
-//     count: 0
-//   },
-//   "c2k511": {
-//     url_id: "c2k511",
-//     url: "http://www.yahoo.com",
-//     user_id: "815bd08a",
-//     count: 0
-//   }
-// };
 
-const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+let urlDatabase = {
+  "b2xVn2": {
+    longURL: "http://www.lighthouselabs.ca",
+    userID: "1f1ffea1",  
+  },
+  "9sm5xk": {
+    longURL: "http://www.google.com",
+    user_id: "1f1ffea1", 
+  },
+  "9sm511": {
+    longURL: "http://www.bingo.com",
+    user_id: "815bd08a",
+  },
+  "c2k511": {
+    longURL: "http://www.yahoo.com",
+    user_id: "815bd08a",
+  }
 };
+
+// const urlDatabase = {
+//   "b2xVn2": "http://www.lighthouselabs.ca",
+//   "9sm5xK": "http://www.google.com"
+// };
 
 
 
