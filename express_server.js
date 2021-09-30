@@ -17,13 +17,13 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 
-const newUrl = (url_id, url, user_id, urlDB) => {
-  return urlDB[url_id] = {
-    url_id,
-    url,
-    user_id
-  };
-};
+// const newUrl = (url_id, url, user_id, urlDB) => {
+//   return urlDB[url_id] = {
+//     url_id,
+//     url,
+//     user_id
+//   };
+// };
 
 
 const getUrlByUserId = (userId, urlDB) => {
@@ -61,15 +61,15 @@ let urlDatabase = {
   },
   "9sm5xk": {
     longURL: "http://www.google.com",
-    user_id: "1f1ffea1", 
+    userID: "1f1ffea1", 
   },
   "9sm511": {
     longURL: "http://www.bingo.com",
-    user_id: "815bd08a",
+    userID: "815bd08a",
   },
   "c2k511": {
     longURL: "http://www.yahoo.com",
-    user_id: "815bd08a",
+    userID: "815bd08a",
   }
 };
 
@@ -95,13 +95,26 @@ app.get("/urls", (req, res) => {
     user: user,
     urls: urlDatabase
   };
-  console.log('templateVars:', templateVars);
+  // console.log('templateVars:', templateVars);
   res.render('urls_index', templateVars);
 });
 
 app.post("/urls", (req, res) => {
+	// creat new short URL
   const shortURLId = generateRandomString();
-  urlDatabase[shortURLId] = req.body.longURL;
+	// get user id from cookie
+	const userId = req.cookies["user_id"];
+	if (!userId ) {
+		res.redirect('login');
+	}
+	console.log(userId)
+  const user = users[userId];
+	let newURL = {
+		longURL : req.body.longURL,
+		user_id : user.id
+	}
+  urlDatabase[shortURLId] = newURL;
+	console.log(urlDatabase)
   res.redirect("/urls");
 });
 
@@ -132,7 +145,7 @@ app.post("/urls/:id", (req, res) => {
   const shortURLId = req.params.id;
   const longURL = req.body.longURL;
   urlDatabase[shortURLId] = req.body.longURL;
-  console.log('shortURLID', shortURLId, 'NewLongURL', longURL);
+  // console.log('shortURLID', shortURLId, 'NewLongURL', longURL);
   res.redirect("/urls");
 });
 
