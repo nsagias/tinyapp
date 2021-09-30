@@ -20,14 +20,14 @@ const userId = () => {
 };
 
 const findUserByEmail = (userEmail, usersDB) => {
-
   for (let user in usersDB) {
     if (usersDB[user].email === userEmail) {  
       return true;
     } 
   }
   return false;
-}
+};
+
 const newUser = (id, name, email, password, userDB) => {
   return userDB[id] = {
     id:  id,
@@ -38,9 +38,20 @@ const newUser = (id, name, email, password, userDB) => {
 }
 
 
+const authenticateByPassword = (email, password, usersDB) => {
+  for (let user in usersDB) {
+    if( usersDB[user].email  === email ) { 
+        if(usersDB[user].password === password) {
+          return usersDB[user].id;
+        }
+    }
+  }
+}
+
+
 const users = { 
   "815bd08a": {
-    id: "'815bd08a", 
+    id: "815bd08a", 
     email: "red1@example.com", 
     password: "red"
   },
@@ -126,12 +137,6 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 });
 
 
-app.post("/login", (req, res) => {
-  console.log('body',req.body.user_id);
-  res.cookie('user_id', req.body.user_id);
-  res.redirect("/urls");
-});
-
 app.post("/logout", (req, res) => {
   console.log('body',req.body.user_id);
   res.clearCookie('user_id')
@@ -143,6 +148,7 @@ app.get("/register", (req, res) => {
   const templateVars = {user: null};
   res.render("register", templateVars);
 });
+
 
 app.post("/register", (req, res) => {
   // const templateVars = {user_id: null};
@@ -166,13 +172,55 @@ app.post("/register", (req, res) => {
   // add new user to db
   newUser(id, name, email, password, usersDB);
   
-  console.log(users);
+  // console.log(users);
   res.cookie('user_id', user_id);
   // res.send('ok');
   res.redirect("urls");
 });
 
+app.get('/login', (req, res)=>{
+  const templateVars = {user: null};
+  console.log('here')
+  res.render('login', templateVars)
+});
 
+
+
+app.post("/login", (req, res) => {
+  console.log('register body form: ', req.body);
+  
+  // get email and password from form
+  const { email, password } = req.body;
+  console.log(email)
+  // // check if email or password are empty strings
+  if (email ==='' || password ==='') {
+    return res.status(400).send('400: Missing Email or Password ');
+  }
+  
+  // get users from store
+  const usersDB = users;
+
+  // check if is a current user 
+  const isCurrentUser = findUserByEmail(email, usersDB);
+  if (!isCurrentUser) {  
+    return res.status(403).send('403: No User Found Please Register');
+  } 
+  
+  // Authenticale user returns user.id
+  const isAuthenticated = authenticateByPassword(email, password, usersDB);
+  console.log(isAuthenticated)
+  if (!isAuthenticated) {
+    return res.status(403).send('403: Password Does Not Match');
+  }
+
+  // add id to cookies
+  console.log(isAuthenticated)
+  const user_id = isAuthenticated;
+  res.cookie('user_id', user_id);
+
+  // redirect to urls
+  res.redirect("urls");
+});
 
 
 
