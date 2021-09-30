@@ -26,10 +26,10 @@ app.set("view engine", "ejs");
 // };
 
 
-const getUrlByUserId = (userId, urlDB) => {
+const getUrlByUserId = (userID, urlDB) => {
   let result = {};
   for (let url in urlDB) {
-    if (urlDB[url].user_id === userId) {
+    if (urlDB[url].userID === userId) {
       result[url] = urlDB[url];
     }
   }
@@ -89,7 +89,7 @@ app.get("/hello", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  const userId = req.cookies["user_id"];
+  const userId = req.cookies["userID"];
   const user = users[userId];
   const templateVars = {
     user: user,
@@ -103,7 +103,7 @@ app.post("/urls", (req, res) => {
 	// creat new short URL
   const shortURLId = generateRandomString();
 	// get user id from cookie
-	const userId = req.cookies["user_id"];
+	const userId = req.cookies["userID"];
 	if (!userId ) {
 		res.redirect('login');
 	}
@@ -111,7 +111,7 @@ app.post("/urls", (req, res) => {
   const user = users[userId];
 	let newURL = {
 		longURL : req.body.longURL,
-		user_id : user.id
+		userID : user.id
 	}
   urlDatabase[shortURLId] = newURL;
 	console.log(urlDatabase)
@@ -124,14 +124,14 @@ app.get("/u/:shortURL", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
-  const userId = req.cookies["user_id"];
+  const userId = req.cookies["userID"];
   const user = users[userId];
   const templateVars = { user: user };
   res.render("urls_new", templateVars);
 });
 
 app.get("/urls/:shortURL", (req, res) => {
-  const userId = req.cookies["user_id"];
+  const userId = req.cookies["userID"];
   const user = users[userId];
   const templateVars = {
     user: user,
@@ -157,8 +157,8 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 
 
 app.post("/logout", (req, res) => {
-  console.log('body', req.body.user_id);
-  res.clearCookie('user_id');
+  console.log('body', req.body.userID);
+  res.clearCookie('userID');
   res.redirect("/urls");
 });
 
@@ -170,10 +170,10 @@ app.get("/register", (req, res) => {
 
 
 app.post("/register", (req, res) => {
-  // const templateVars = {user_id: null};
+  // const templateVars = {userID: null};
   console.log('register body form: ', req.body);
   const id = userId();
-  const user_id = id;
+  const userID = id;
   const { name, email, password } = req.body;
 
   // check if email or password are empty strings
@@ -192,7 +192,7 @@ app.post("/register", (req, res) => {
   newUser(id, name, email, password, usersDB);
 
   // console.log(users);
-  res.cookie('user_id', user_id);
+  res.cookie('userID', userID);
   // res.send('ok');
   res.redirect("urls");
 });
@@ -234,8 +234,8 @@ app.post("/login", (req, res) => {
 
   // add id to cookies
   console.log(isAuthenticated);
-  const user_id = isAuthenticated;
-  res.cookie('user_id', user_id);
+  const userID = isAuthenticated;
+  res.cookie('userID', userID);
 
   // redirect to urls
   res.redirect("urls");
