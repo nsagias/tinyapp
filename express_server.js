@@ -4,15 +4,10 @@ const PORT = 8080;
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const uuid = require("uuid");
-
+const bodyParser = require("body-parser");
 
 app.use(morgan('short'));
 app.use(cookieParser());
-
-
-const bodyParser = require("body-parser");
-
-
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 
@@ -27,7 +22,7 @@ const userId = () => {
 
 
 const users = { 
-  "'815bd08a": {
+  "815bd08a": {
     id: "'815bd08a", 
     email: "red1@example.com", 
     password: "red"
@@ -60,12 +55,13 @@ app.get("/hello",(req, res)=>{
 });
 
 app.get("/urls",(req, res)=>{
-  // console.log(req.cookies["username"]
+  const userId = req.cookies["user_id"];
+  const user = users[userId];
   const templateVars = { 
-    username: req.cookies["username"],
+    user: user,
     urls: urlDatabase
-  }
-  console.log('templateVars:',templateVars)
+  };
+  console.log('templateVars:',templateVars);
   res.render('urls_index', templateVars);
 });
 
@@ -81,14 +77,17 @@ app.get("/u/:shortURL", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
-  const templateVars = { username: req.cookies["username"]};
+  const userId = req.cookies["user_id"];
+  const user = users[userId];
+  const templateVars = { user: user};
   res.render("urls_new", templateVars);
 });
 
 app.get("/urls/:shortURL", (req, res) => {
- 
+  const userId = req.cookies["user_id"];
+  const user = users[userId];
   const templateVars = { 
-    username: req.cookies["username"],
+    user: user,
     shortURL: req.params.shortURL, 
     longURL: urlDatabase[req.params.shortURL]
   };
@@ -110,24 +109,46 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 });
 
 
-
 app.post("/login", (req, res) => {
-  console.log('body',req.body.username);
-  res.cookie('username', req.body.username);
+  console.log('body',req.body.user_id);
+  res.cookie('user_id', req.body.user_id);
   res.redirect("/urls");
 });
 
 app.post("/logout", (req, res) => {
-  console.log('body',req.body.username);
-  res.clearCookie('username')
+  console.log('body',req.body.user_id);
+  res.clearCookie('user_id')
   res.redirect("/urls");
 });
 
 
 app.get("/register", (req, res) => {
-  const templateVars = {username: req.cookies["username"]};
+  const templateVars = {user: null};
   res.render("register", templateVars);
 });
+
+app.post("/register", (req, res) => {
+  // const templateVars = {user_id: null};
+  console.log('register body form: ', req.body);
+  const id = userId();
+  const user_id = id;
+  const name = req.body.name;
+  const email = req.body.email;
+  const password = req.body.password;
+  users[id] = {
+    id:  id,
+    name: name,
+    email: email,
+    password: password
+  }
+
+  console.log(users)
+  res.cookie('user_id', user_id);
+  // res.send('ok');
+  res.redirect("urls");
+});
+
+
 
 
 
