@@ -132,9 +132,7 @@ app.post("/register", (req, res) => {
   console.log('register body form: ', req.body);
   const id = userId();
   const user_id = id;
-  const name = req.body.name;
-  const email = req.body.email;
-  const password = req.body.password;
+  const { name, email, password } = req.body;
   if (email ==='' || password ==='') {
     return res.status(400).send('400: Missing Email or Password ');
   }
