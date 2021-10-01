@@ -24,17 +24,17 @@ app.set("view engine", "ejs");
 //     user_id
 //   };
 // };
-
-
-const getUrlByUserId = (userID, urlDB) => {
+const urlsForUser = (id, db) => {
   let result = {};
-  for (let url in urlDB) {
-    if (urlDB[url].userID === userId) {
-      result[url] = urlDB[url];
+  for (let shortURL in db) {
+    if (db[shortURL].userID === id) {
+      result[shortURL] = {
+        longURL : db[shortURL].longURL};
+      }
     }
-  }
   return result;
 };
+
 
 const users = {
   "815bd08a": {
@@ -94,9 +94,11 @@ app.get("/urls", (req, res) => {
 		res.redirect('login');
 	}
   const user = users[userId];
+  let userURLs =  urlsForUser(userId, urlDatabase); 
+  console.log(userURLs);
   const templateVars = {
     user: user,
-    urls: urlDatabase
+    urls: userURLs
   };
   // console.log('templateVars:', templateVars);
   res.render('urls_index', templateVars);
