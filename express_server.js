@@ -11,7 +11,8 @@ const {
   userId,
   findUserByEmail,
   newUser,
-  authenticateByPassword
+  authenticateByPassword,
+  urlsForUser
 } = require('./helperFunctions/userManagement');
 
 app.use(morgan('short'));
@@ -24,18 +25,6 @@ app.use(cookieSession({
 }));
 
 app.set("view engine", "ejs");
-
-
-const urlsForUser = (id, db) => {
-  let result = {};
-  for (let shortURL in db) {
-    if (db[shortURL].userID === id) {
-      result[shortURL] = {
-        longURL : db[shortURL].longURL};
-      }
-    }
-  return result;
-};
 
 
 const users = {

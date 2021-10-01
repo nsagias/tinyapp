@@ -41,6 +41,17 @@ const authenticateByPassword = (email, password, usersDB) => {
   }
 };
 
+const urlsForUser = (id, db) => {
+  let result = {};
+  for (let shortURL in db) {
+    if (db[shortURL].userID === id) {
+      result[shortURL] = {
+        longURL : db[shortURL].longURL};
+      }
+    }
+  return result;
+};
+
 
 
 module.exports = {
@@ -48,5 +59,6 @@ module.exports = {
   userId,
   findUserByEmail,
   newUser,
-  authenticateByPassword
+  authenticateByPassword,
+  urlsForUser,
 };
