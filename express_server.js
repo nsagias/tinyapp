@@ -13,7 +13,7 @@ const {
   newUser,
   authenticateByPassword,
   urlsForUser
-} = require('./helperFunctions/userManagement');
+} = require('./helpers');
 
 app.use(morgan('short'));
 
