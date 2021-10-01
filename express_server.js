@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const PORT = 8080;
 const bcrypt = require('bcryptjs');
+const cookieSession = require('cookie-session')
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require("body-parser");
@@ -14,8 +15,13 @@ const {
 } = require('./helperFunctions/userManagement');
 
 app.use(morgan('short'));
-app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(cookieSession({
+  name: 'session',
+  keys: ['the longer the better', 'two is betther than one'],
+}));
+
 app.set("view engine", "ejs");
 
 
