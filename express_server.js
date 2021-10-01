@@ -17,13 +17,7 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 
-// const newUrl = (url_id, url, user_id, urlDB) => {
-//   return urlDB[url_id] = {
-//     url_id,
-//     url,
-//     user_id
-//   };
-// };
+
 const urlsForUser = (id, db) => {
   let result = {};
   for (let shortURL in db) {
