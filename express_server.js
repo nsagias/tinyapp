@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const PORT = 8080;
+const bcrypt = require('bcryptjs');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require("body-parser");
@@ -211,10 +212,13 @@ app.post("/register", (req, res) => {
   if (isCurrentUser) {
     return res.status(400).send('400: Already Exists');
   }
+   
+  // hashedPassword
+  const hashedPassword = bcrypt.hashSync(password, 10);
 
   // add new user to db
-  newUser(id, name, email, password, usersDB);
-
+  newUser(id, name, email, hashedPassword, usersDB);
+  console.log(users)
   // console.log(users);
   res.cookie('userID', userID);
   // res.send('ok');
