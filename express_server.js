@@ -89,7 +89,7 @@ app.get("/urls", (req, res) => {
 	}
   const user = users[userId];
   let userURLs =  urlsForUser(userId, urlDatabase); 
-  console.log(userURLs);
+  // console.log(userURLs);
   const templateVars = {
     user: user,
     urls: userURLs
@@ -114,22 +114,26 @@ app.post("/urls", (req, res) => {
 		longURL : req.body.longURL,
 		userID : user.id
 	}
+  console.log(newURL)
   urlDatabase[shortURLId] = newURL;
 	// console.log(urlDatabase);
   res.redirect("/urls");
 });
 
 app.get("/u/:shortURL", (req, res) => {
+  console.log(urlDatabase[req.params.shortURL])
+  console.log(urlDatabase[req.params.shortURL].longURL)
+  console.log(urlDatabase)
   const longURL = urlDatabase[req.params.shortURL].longURL;
   // console.log(longURL.longURL)
   res.redirect(longURL);
 });
 
 app.get("/urls/new", (req, res) => {
-  // const userId = req.cookies["userID"];
-	// if (!userId ) {
-	// 	res.redirect('login');
-	// }
+  const userId = req.cookies["userID"];
+	if (!userId ) {
+		return res.redirect('login');
+	}
   const user = users[userId];
   const templateVars = { user: user };
   res.render("urls_new", templateVars);
@@ -138,7 +142,7 @@ app.get("/urls/new", (req, res) => {
 app.get("/urls/:shortURL", (req, res) => {
   const userId = req.cookies["userID"];
 	if (!userId ) {
-		return res.redirect('login');
+		res.redirect('login');
 	}
   const user = users[userId];
   const templateVars = {
@@ -154,9 +158,13 @@ app.post("/urls/:id", (req, res) => {
 	if (!userId ) {
 		return res.redirect('login');
 	}
+  
   const shortURLId = req.params.id;
   const longURL = req.body.longURL;
-  urlDatabase[shortURLId] = req.body.longURL;
+  // console.log('LONGURL:',longURL)
+
+  urlDatabase[shortURLId].longURL =  longURL;
+  // console.log('URLDATABASE: ',urlDatabase)
   // console.log('shortURLID', shortURLId, 'NewLongURL', longURL);
   res.redirect("/urls");
 });
@@ -164,7 +172,7 @@ app.post("/urls/:id", (req, res) => {
 app.post("/urls/:shortURL/delete", (req, res) => {
   const userId = req.cookies["userID"];
 	if (!userId ) {
-		return res.redirect('login');
+		returnres.redirect('login');
 	}
   const { shortURL } = req.params;
   delete urlDatabase[shortURL];
