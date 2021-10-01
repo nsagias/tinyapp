@@ -177,10 +177,6 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 
 
 app.post("/logout", (req, res) => {
-  const userId = req.cookies["userID"];
-	if (!userId ) {
-		res.redirect('login');
-	}
   // console.log('body', req.body.userID);
   res.clearCookie('userID');
   res.redirect("/urls");
