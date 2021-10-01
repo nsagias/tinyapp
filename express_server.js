@@ -15,6 +15,7 @@ const {
 } = require('./helperFunctions/userManagement');
 
 app.use(morgan('short'));
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cookieSession({
@@ -90,7 +91,7 @@ app.get("/hello", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  const userId = req.cookies["userID"];
+  const userId = req.session["userID"];
   if (!userId ) {
 		return res.redirect('login');
 	}
@@ -107,7 +108,7 @@ app.get("/urls", (req, res) => {
 
 app.post("/urls", (req, res) => {
   	// get user id from cookie
-  const userId = req.cookies["userID"];
+  const userId = req.session["userID"];
 	if (!userId ) {
 		return res.redirect('login');
 	}
@@ -137,7 +138,7 @@ app.get("/u/:shortURL", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
-  const userId = req.cookies["userID"];
+  const userId = req.session["userID"];
 	if (!userId ) {
 		return res.redirect('login');
 	}
@@ -147,7 +148,7 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.get("/urls/:shortURL", (req, res) => {
-  const userId = req.cookies["userID"];
+  const userId = req.session["userID"];
 	if (!userId ) {
 		res.redirect('login');
 	}
@@ -161,7 +162,7 @@ app.get("/urls/:shortURL", (req, res) => {
 });
 
 app.post("/urls/:id", (req, res) => {
-  const userId = req.cookies["userID"];
+  const userId = req.session["userID"];
 	if (!userId ) {
 		return res.redirect('login');
 	}
@@ -177,7 +178,7 @@ app.post("/urls/:id", (req, res) => {
 });
 
 app.post("/urls/:shortURL/delete", (req, res) => {
-  const userId = req.cookies["userID"];
+  const userId = req.session["userID"];
 	if (!userId ) {
 		returnres.redirect('login');
 	}
@@ -189,7 +190,7 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 
 app.post("/logout", (req, res) => {
   // console.log('body', req.body.userID);
-  res.clearCookie('userID');
+  req.session = null
   res.redirect("/urls");
 });
 
@@ -226,7 +227,7 @@ app.post("/register", (req, res) => {
   newUser(id, name, email, hashedPassword, usersDB);
   console.log(users)
   // console.log(users);
-  res.cookie('userID', userID);
+  req.session.userDB = userID;
   // res.send('ok');
   res.redirect("urls");
 });
@@ -269,7 +270,7 @@ app.post("/login", (req, res) => {
   // add id to cookies
   console.log(isAuthenticated);
   const userID = isAuthenticated;
-  res.cookie('userID', userID);
+  req.session.userID = userID;
 
   // redirect to urls
   res.redirect("urls");
