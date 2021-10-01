@@ -90,6 +90,9 @@ app.get("/hello", (req, res) => {
 
 app.get("/urls", (req, res) => {
   const userId = req.cookies["userID"];
+  if (!userId ) {
+		res.redirect('login');
+	}
   const user = users[userId];
   const templateVars = {
     user: user,
@@ -100,21 +103,23 @@ app.get("/urls", (req, res) => {
 });
 
 app.post("/urls", (req, res) => {
-	// creat new short URL
-  const shortURLId = generateRandomString();
-	// get user id from cookie
-	const userId = req.cookies["userID"];
+  	// get user id from cookie
+  const userId = req.cookies["userID"];
 	if (!userId ) {
 		res.redirect('login');
 	}
-	console.log(userId)
+	// creat new short URL
+  const shortURLId = generateRandomString();
+
+
+	// console.log(userId);
   const user = users[userId];
 	let newURL = {
 		longURL : req.body.longURL,
 		userID : user.id
 	}
   urlDatabase[shortURLId] = newURL;
-	console.log(urlDatabase)
+	// console.log(urlDatabase);
   res.redirect("/urls");
 });
 
@@ -126,6 +131,9 @@ app.get("/u/:shortURL", (req, res) => {
 
 app.get("/urls/new", (req, res) => {
   const userId = req.cookies["userID"];
+	if (!userId ) {
+		res.redirect('login');
+	}
   const user = users[userId];
   const templateVars = { user: user };
   res.render("urls_new", templateVars);
@@ -133,6 +141,9 @@ app.get("/urls/new", (req, res) => {
 
 app.get("/urls/:shortURL", (req, res) => {
   const userId = req.cookies["userID"];
+	if (!userId ) {
+		res.redirect('login');
+	}
   const user = users[userId];
   const templateVars = {
     user: user,
@@ -143,6 +154,10 @@ app.get("/urls/:shortURL", (req, res) => {
 });
 
 app.post("/urls/:id", (req, res) => {
+  const userId = req.cookies["userID"];
+	if (!userId ) {
+		res.redirect('login');
+	}
   const shortURLId = req.params.id;
   const longURL = req.body.longURL;
   urlDatabase[shortURLId] = req.body.longURL;
@@ -151,6 +166,10 @@ app.post("/urls/:id", (req, res) => {
 });
 
 app.post("/urls/:shortURL/delete", (req, res) => {
+  const userId = req.cookies["userID"];
+	if (!userId ) {
+		res.redirect('login');
+	}
   const { shortURL } = req.params;
   delete urlDatabase[shortURL];
   res.redirect("/urls");
@@ -158,7 +177,11 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 
 
 app.post("/logout", (req, res) => {
-  console.log('body', req.body.userID);
+  const userId = req.cookies["userID"];
+	if (!userId ) {
+		res.redirect('login');
+	}
+  // console.log('body', req.body.userID);
   res.clearCookie('userID');
   res.redirect("/urls");
 });
@@ -207,7 +230,7 @@ app.get('/login', (req, res) => {
 
 
 app.post("/login", (req, res) => {
-  console.log('register body form: ', req.body);
+  // console.log('register body form: ', req.body);
 
   // get email and password from form
   const { email, password } = req.body;
