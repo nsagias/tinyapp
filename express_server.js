@@ -130,10 +130,10 @@ app.get("/u/:shortURL", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
-  const userId = req.cookies["userID"];
-	if (!userId ) {
-		res.redirect('login');
-	}
+  // const userId = req.cookies["userID"];
+	// if (!userId ) {
+	// 	res.redirect('login');
+	// }
   const user = users[userId];
   const templateVars = { user: user };
   res.render("urls_new", templateVars);
@@ -148,7 +148,7 @@ app.get("/urls/:shortURL", (req, res) => {
   const templateVars = {
     user: user,
     shortURL: req.params.shortURL,
-    longURL: urlDatabase[req.params.shortURL]
+    longURL: urlDatabase[req.params.shortURL].longURL
   };
   res.render("urls_show", templateVars);
 });
