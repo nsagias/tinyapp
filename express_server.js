@@ -34,18 +34,18 @@ const urlsForUser = (id, db) => {
 const users = {
   "815bd08a": {
     id: "815bd08a",
-    email: "red1@example.com",
-    password: "red",
+    email: "red@example.com",
+    password: bcrypt.hashSync('red', 10)
   },
   "ec3bdf7a": {
     id: "ec3bdf7a",
     email: "green@example.com",
-    password: "green"
+    password: bcrypt.hashSync('green', 10)
   },
   "1f1ffea1": {
     id: "1f1ffea1",
     email: "blue@example.com",
-    password: "blue"
+    password: bcrypt.hashSync('blue', 10)
   }
 };
 
@@ -227,7 +227,7 @@ app.post("/register", (req, res) => {
 
 app.get('/login', (req, res) => {
   const templateVars = { user: null };
-  console.log('here');
+  // console.log('here');
   res.render('login', templateVars);
 });
 
@@ -238,7 +238,7 @@ app.post("/login", (req, res) => {
 
   // get email and password from form
   const { email, password } = req.body;
-  console.log(email);
+  // console.log(email);
   // // check if email or password are empty strings
   if (email === '' || password === '') {
     return res.status(400).send('400: Missing Email or Password ');

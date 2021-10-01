@@ -1,4 +1,6 @@
+const bcrypt = require('bcryptjs');
 const uuid = require("uuid");
+
 
 const generateRandomString = () => {
   return uuid.v4().substring(0,6)
@@ -26,10 +28,13 @@ const newUser = (id, name, email, password, userDB) => {
   };
 };
 
+
 const authenticateByPassword = (email, password, usersDB) => {
+  // bcrypt.compareSync(password, hashedPassword);
   for (let user in usersDB) {
     if( usersDB[user].email  === email ) { 
-        if(usersDB[user].password === password) {
+         let storedPassword = usersDB[user].password;
+        if(bcrypt.compareSync(password, storedPassword)) {
           return usersDB[user].id;
         }
     }
