@@ -45,6 +45,7 @@ const users = {
   }
 };
 
+
 let urlDatabase = {
   "b2xVn2": {
     longURL: "http://www.lighthouselabs.ca",
@@ -64,11 +65,6 @@ let urlDatabase = {
   }
 };
 
-// const urlDatabase = {
-//   "b2xVn2": "http://www.lighthouselabs.ca",
-//   "9sm5xK": "http://www.google.com"
-// };
-
 
 
 app.get("/", (req, res) => {
@@ -81,12 +77,17 @@ app.get("/", (req, res) => {
 
 
 app.get("/urls", (req, res) => {
+  // get userID from session and check
   const userId = req.session["userID"];
+  // return ot login if user not logged in
   if (!userId) {
     return res.redirect('login');
   }
+   // get user id from user database
   const user = users[userId];
+  // get urs for the user 
   let userURLs = urlsForUser(userId, urlDatabase);
+  // add urls to templateVvars with user id
   const templateVars = {
     user: user,
     urls: userURLs
@@ -102,48 +103,60 @@ app.post("/urls", (req, res) => {
   }
   // creat new short URL
   const shortURLId = generateRandomString();
+  // get user id from user database
   const user = users[userId];
+  // create new url
   let newURL = {
     longURL: req.body.longURL,
     userID: user.id
   };
-
+  // put new shortURL in database
   urlDatabase[shortURLId] = newURL;
 
   res.redirect("/urls");
 });
 
 app.get("/u/:shortURL", (req, res) => {
+  // receives a shoten url from an anonymous user
   const longURL = urlDatabase[req.params.shortURL].longURL;
   res.redirect(longURL);
 });
 
 app.get("/urls/new", (req, res) => {
+  // check if logged in and exit if not logged in
   const userId = req.session["userID"];
   if (!userId) {
-    return res.redirect('login');
+    return res.redirect('/login');
   }
+  // get user id from user database
   const user = users[userId];
   const templateVars = { user: user };
+  // show the create new URL screen
   res.render("urls_new", templateVars);
 });
 
 app.get("/urls/:shortURL", (req, res) => {
+  // get user id from session
   const userId = req.session["userID"];
+  // if no userID redirect to login
   if (!userId) {
     res.redirect('login');
   }
+  // get user from user database
   const user = users[userId];
   const templateVars = {
     user: user,
     shortURL: req.params.shortURL,
     longURL: urlDatabase[req.params.shortURL].longURL
   };
+  // show single url
   res.render("urls_show", templateVars);
 });
 
 app.post("/urls/:id", (req, res) => {
+  // get userID from session 
   const userId = req.session["userID"];
+  // if customer not logged in redirect to user screen
   if (!userId) {
     return res.redirect('login');
   }
@@ -154,10 +167,12 @@ app.post("/urls/:id", (req, res) => {
 });
 
 app.post("/urls/:shortURL/delete", (req, res) => {
+  // check if user id and logged ing
   const userId = req.session["userID"];
   if (!userId) {
     return res.redirect('login');
   }
+  // if logged in get use provided 
   const { shortURL } = req.params;
   delete urlDatabase[shortURL];
   res.redirect("/urls");
@@ -165,26 +180,27 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 
 
 app.post("/logout", (req, res) => {
-  // console.log('body', req.body.userID);
+  // set session value to null
   req.session = null;
   res.redirect("/urls");
 });
 
 
 app.get("/register", (req, res) => {
+  // show registration screen
   const templateVars = { user: null };
   res.render("register", templateVars);
 });
 
 
 app.post("/register", (req, res) => {
-  // const templateVars = {userID: null};
-  console.log('register body form: ', req.body);
+  // generate a new ID for user
   const id = userId();
   const userID = id;
+  // get data from form
   const { name, email, password } = req.body;
 
-  // check if email or password are empty strings
+  // check for emptry strings in  email or password
   if (email === '' || password === '') {
     return res.status(400).send('400: Missing Email or Password ');
   }
@@ -192,51 +208,51 @@ app.post("/register", (req, res) => {
   // check if is a current user
   const usersDB = users;
   const isCurrentUser = findUserByEmail(email, usersDB);
+  // if user exists return with a 400
   if (isCurrentUser) {
     return res.status(400).send('400: Already Exists');
   }
 
-  // hashedPassword
+  // create a hashedPassword
   const hashedPassword = bcrypt.hashSync(password, 10);
 
-  // add new user to db
+  // add new userID to session
   newUser(id, name, email, hashedPassword, usersDB);
-  req.session.userDB = userID;
+  req.session.userID = userID;
   res.redirect("urls");
 });
 
 app.get('/login', (req, res) => {
+  // get login page/form
   const templateVars = { user: null };
   res.render('login', templateVars);
 });
 
 
-
 app.post("/login", (req, res) => {
   const { email, password } = req.body;
-  // // check if email or password are empty strings
+  // check if email or password are empty strings
   if (email === '' || password === '') {
     return res.status(400).send('400: Missing Email or Password ');
   }
-
-  // get users from store
+  // get users from database
   const usersDB = users;
 
   // check if is a current user
   const isCurrentUser = findUserByEmail(email, usersDB);
+  // if no user found send 403 and message too register
   if (!isCurrentUser) {
     return res.status(403).send('403: No User Found Please Register');
   }
 
-  // Authenticale user returns user.id
+  // Authenticale user returns user id
   const isAuthenticated = authenticateByPassword(email, password, usersDB);
-
+  // if password returns false 403 response
   if (!isAuthenticated) {
     return res.status(403).send('403: Password Does Not Match');
   }
 
-  // add id to cookies
- 
+  // add id to to session for valid user
   const userID = isAuthenticated;
   req.session.userID = userID;
 
@@ -246,10 +262,10 @@ app.post("/login", (req, res) => {
 
 
 
-
-app.get("/urls.json", (req, res) => {
-  res.json(urlDatabase);
-});
+// return database in JSON
+// app.get("/urls.json", (req, res) => {
+//   res.json(urlDatabase);
+// });
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
