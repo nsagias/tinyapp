@@ -21,7 +21,7 @@ describe('findUserByEmail', function() {
     const expectedOutput = true;
     assert.isTrue(expectedOutput);
   });
-  it('should return false user with valid email', function() {
+  it('should return false user with invalid email', function() {
     const user = findUserByEmail("user1@example.com", users)
     const expectedOutput = false;
     assert.isFalse(expectedOutput);
