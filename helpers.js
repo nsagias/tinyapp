@@ -41,6 +41,7 @@ const authenticateByPassword = (email, password, usersDB) => {
   }
 };
 
+// function takes userId and the urlDatabase
 const urlsForUser = (id, db) => {
   let result = {};
   for (let shortURL in db) {
