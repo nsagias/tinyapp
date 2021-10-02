@@ -44,41 +44,44 @@ let urlDatabase = {
 };
 
 
-describe('urlsForUser' , () => {
-  it('should return user 815bd08a short urls', () => {
-    const output = urlsForUser ("815bd08a", urlDatabase);
+describe('urlsForUser', () => {
+  it('should return user 815bd08a\'s short urls', () => {
+    const output = urlsForUser("815bd08a", urlDatabase);
     const expectedOutput = {
       '9sm511': { longURL: 'http://www.bingo.com' },
       c2k511: { longURL: 'http://www.yahoo.com' }
     };
-    assert.deepEqual(output , expectedOutput);
+    assert.deepEqual(output, expectedOutput);
   });
-  it('should return not return 815bd08a short urls', () => {
-    const output = urlsForUser ("815bd08a", urlDatabase);
+  it('should return not return 815bd08a\'s short urls', () => {
+    const output = urlsForUser("815bd08a", urlDatabase);
     const expectedOutput = {
       b2xVn2: { longURL: 'http://www.lighthouselabs.ca' },
       '9sm5xk': { longURL: 'http://www.google.com' }
     };
-    assert.notDeepEqual(output , expectedOutput);
+    assert.notDeepEqual(output, expectedOutput);
   });
   it('should return empty object if no user or inccorect id', () => {
-    const output = urlsForUser ("815bd0afdsa", urlDatabase);
+    const output = urlsForUser("815bd0afdsa", urlDatabase);
     const expectedOutput = {};
-    assert.deepEqual(output , expectedOutput);
+    assert.deepEqual(output, expectedOutput);
   });
   it('should return empty object if empty string passed in', () => {
-    const output = urlsForUser ("", urlDatabase);
+    const output = urlsForUser("", urlDatabase);
     const expectedOutput = {};
-    assert.deepEqual(output , expectedOutput);
+    assert.deepEqual(output, expectedOutput);
   });
-  it('should return error if Database is empty ', () => {
-    const output = urlsForUser ("", database);
+  it('should return empty object if empty urlDatabase values passed', () => {
+    let emptyDB;
+    const output = urlsForUser("", emptyDB);
     const expectedOutput = {};
-    assert.deepEqual(output , expectedOutput);
+    assert.deepEqual(output, expectedOutput);
   });
+  it('should throw an error if Database is empty', () => {
+    const expectedOutput = "database is not defined";
+    assert.throws(() => urlsForUser("", database), Error, expectedOutput);
+  });
+ 
 });
 
-let userId = "1f1ffea1"
-const output = urlsForUser (userId, urlDatabase);
-console.log(output);
 
