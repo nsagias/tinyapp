@@ -235,21 +235,28 @@ app.get('/login', (req, res) => {
 app.post("/login", (req, res) => {
   const { email, password } = req.body;
   // check if email or password are empty strings
-  if (email === '' || password === '') {
+
+  // trim password and email
+  // avoid duplicated and getting around check
+  const emailT = email.trim();
+  const passwordT = password.trim();
+
+  if (emailT === '' || passwordT === '') {
     return res.status(400).send('400: Missing Email or Password ');
   }
   // get users from database
   const usersDB = users;
 
+
   // check if is a current user
-  const isCurrentUser = findUserByEmail(email, usersDB);
+  const isCurrentUser = findUserByEmail(emailT, usersDB);
   // if no user found send 403 and message too register
   if (!isCurrentUser) {
     return res.status(403).send('403: No User Found Please Register');
   }
 
   // Authenticale user returns user id
-  const isAuthenticated = authenticateByPassword(email, password, usersDB);
+  const isAuthenticated = authenticateByPassword(emailT, passwordT, usersDB);
   // if password returns false 403 response
   if (!isAuthenticated) {
     return res.status(403).send('403: Password Does Not Match');
