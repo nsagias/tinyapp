@@ -34,7 +34,10 @@ describe('authenticateByPassword', () => {
     const expectedOutput = undefined;
     assert.strictEqual(expectedOutput, userID);
   });
+  it('should throw an error if Database is empty', () => {
+    const expectedOutput = "database is not defined";
+    assert.throws(() => urlsForUser("", database), Error, expectedOutput);
+  });
+ 
 });
- 
- 
 
