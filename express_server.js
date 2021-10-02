@@ -7,7 +7,7 @@ const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require("body-parser");
 const {
-  generateRandomString,
+  shortURLGenerator,
   userId,
   findUserByEmail,
   newUser,
