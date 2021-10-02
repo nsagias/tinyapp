@@ -1,6 +1,13 @@
 const { assert } = require('chai');
 const bcrypt = require('bcryptjs');
-const { findUserByEmail } = require('../helpers.js');
+const uuid = require("uuid");
+const { 
+  findUserByEmail,
+  generateRandomString  
+} = require('../helpers.js');
+
+
+
 
 const users = {
   "userRandomID": {
@@ -28,4 +35,16 @@ describe('findUserByEmail', function() {
   });
 });
 
+describe('generateRandomString ', () => {
+  it('should confirm length is 6 in length', function() {
+    const id = generateRandomString().length;
+    const expectedOutput = 6;
+    assert.strictEqual(id, expectedOutput);
+  });
+  it('should return false length when 5 is length', () => {
+    const id = generateRandomString();
+    const expectedOutput = 5;
+    assert.notStrictEqual(id, expectedOutput);
+  });
+});
 
