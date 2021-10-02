@@ -202,25 +202,31 @@ app.post("/register", (req, res) => {
   const userID = id;
   // get data from form
   const { name, email, password } = req.body;
+  // trim password and email
+  // avoid duplicated and getting around check
+  const nameT = name.trim()
+  const emailT = email.trim();
+  const passwordT = password.trim();
+
 
   // check for emptry strings in  email or password
-  if (email === '' || password === '') {
+  if (emailT === '' || passwordT === '' || nameT ==='') {
     return res.status(400).send('400: Missing Email or Password ');
   }
 
   // check if is a current user
   const usersDB = users;
-  const isCurrentUser = findUserByEmail(email, usersDB);
+  const isCurrentUser = findUserByEmail(emailT, usersDB);
   // if user exists return with a 400
   if (isCurrentUser) {
     return res.status(400).send('400: Already Exists');
   }
 
   // create a hashedPassword
-  const hashedPassword = bcrypt.hashSync(password, 10);
+  const hashedPassword = bcrypt.hashSync(passwordT, 10);
 
   // add new userID to session
-  newUser(id, name, email, hashedPassword, usersDB);
+  newUser(id, nameT, emailT, hashedPassword, usersDB);
   req.session.userID = userID;
   res.redirect("urls");
 });
