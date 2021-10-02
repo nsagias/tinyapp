@@ -19,13 +19,13 @@ const users = {
   }
 };
 
-describe('findUserByEmail', function() {
-  it('should return a user with valid email', function() {
+describe('findUserByEmail', () => {
+  it('should return a user with valid email', () => {
     const user = findUserByEmail("user@example.com", users)
     const expectedOutput = true;
     assert.isTrue(expectedOutput);
   });
-  it('should return false user with invalid email', function() {
+  it('should return false user with invalid email', () => {
     const user = findUserByEmail("user1@example.com", users)
     const expectedOutput = undefined;
     assert.strictEqual(expectedOutput);
@@ -33,7 +33,7 @@ describe('findUserByEmail', function() {
 });
 
 describe('generateRandomString ', () => {
-  it('should confirm length is 6 in length', function() {
+  it('should confirm length is 6 in length', () => {
     const shortURL = shortURLGenerator().length;
     const expectedOutput = 6;
     assert.strictEqual(shortURL, expectedOutput);
@@ -51,7 +51,7 @@ describe('generateRandomString ', () => {
 });
 
 describe('userId', () => {
-  it('should confirm length is 8 in length', function() {
+  it('should confirm length is 8 in length', () =>{
     const userID = userId().length;
     const expectedOutput = 8;
     assert.strictEqual(userID , expectedOutput);
