@@ -3,7 +3,8 @@ const bcrypt = require('bcryptjs');
 const uuid = require("uuid");
 const { 
   findUserByEmail,
-  generateRandomString  
+  shortURLGenerator,
+  userId,
 } = require('../helpers.js');
 
 
@@ -37,14 +38,39 @@ describe('findUserByEmail', function() {
 
 describe('generateRandomString ', () => {
   it('should confirm length is 6 in length', function() {
-    const id = generateRandomString().length;
+    const shortURL = shortURLGenerator().length;
     const expectedOutput = 6;
-    assert.strictEqual(id, expectedOutput);
+    assert.strictEqual(shortURL, expectedOutput);
   });
   it('should return false length when 5 is length', () => {
-    const id = generateRandomString();
+    const shortURL = shortURLGenerator().length;
     const expectedOutput = 5;
-    assert.notStrictEqual(id, expectedOutput);
+    assert.notStrictEqual(shortURL, expectedOutput);
+  });
+  it('should return false length when 7 is length', () => {
+    const shortURL  = shortURLGenerator().length;
+    const expectedOutput = 7;
+    assert.notStrictEqual(shortURL, expectedOutput);
   });
 });
+
+describe('userId', () => {
+  it('should confirm length is 8 in length', function() {
+    const userID = userId().length;
+    const expectedOutput = 8;
+    assert.strictEqual(userID , expectedOutput);
+  });
+  it('should return false length when 7 is length', () => {
+    const userID = userId().length;
+    const expectedOutput = 7;
+    assert.notStrictEqual(userID, expectedOutput);
+  });
+  it('should return false length when 9 is length', () => {
+    const userID = userId().length;
+    const expectedOutput = 9;
+    assert.notStrictEqual(userID, expectedOutput);
+  });
+});
+
+
 
