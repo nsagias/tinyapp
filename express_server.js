@@ -30,16 +30,19 @@ app.set("view engine", "ejs");
 const users = {
   "815bd08a": {
     id: "815bd08a",
+    name: "red",
     email: "red@example.com",
     password: bcrypt.hashSync('red', 10)
   },
   "ec3bdf7a": {
     id: "ec3bdf7a",
+    name: "green",
     email: "green@example.com",
     password: bcrypt.hashSync('green', 10)
   },
   "1f1ffea1": {
     id: "1f1ffea1",
+    name: "blue",
     email: "blue@example.com",
     password: bcrypt.hashSync('blue', 10)
   }

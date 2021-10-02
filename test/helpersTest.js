@@ -1,13 +1,9 @@
 const { assert } = require('chai');
-const bcrypt = require('bcryptjs');
-const uuid = require("uuid");
 const { 
   findUserByEmail,
   shortURLGenerator,
-  userId,
+  userId
 } = require('../helpers.js');
-
-
 
 
 const users = {
@@ -71,6 +67,4 @@ describe('userId', () => {
     assert.notStrictEqual(userID, expectedOutput);
   });
 });
-
-
 
