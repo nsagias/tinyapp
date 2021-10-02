@@ -23,8 +23,8 @@ describe('findUserByEmail', function() {
   });
   it('should return false user with invalid email', function() {
     const user = findUserByEmail("user1@example.com", users)
-    const expectedOutput = false;
-    assert.isFalse(expectedOutput);
+    const expectedOutput = undefined;
+    assert.strictEqual(expectedOutput);
   });
 });
 

@@ -16,7 +16,7 @@ const findUserByEmail = (userEmail, usersDB) => {
       return true;
     } 
   }
-  return false;
+  return undefined;
 };
 
 const newUser = (id, name, email, password, userDB) => {
