@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const uuid = require("uuid");
 
 
-const generateRandomString = () => {
+const shortURLGenerator = () => {
   return uuid.v4().substring(0,6)
 };
 
@@ -55,7 +55,7 @@ const urlsForUser = (id, db) => {
 
 
 module.exports = {
-  generateRandomString,
+  shortURLGenerator,
   userId,
   findUserByEmail,
   newUser,

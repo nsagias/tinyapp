@@ -102,7 +102,7 @@ app.post("/urls", (req, res) => {
     return res.redirect('login');
   }
   // creat new short URL
-  const shortURLId = generateRandomString();
+  const shortURLId = shortURLGenerator();
   // get user id from user database
   const user = users[userId];
   // create new url
