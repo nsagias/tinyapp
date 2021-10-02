@@ -1,8 +1,8 @@
 const { assert } = require('chai');
+const bcrypt = require('bcryptjs');
+const { findUserByEmail } = require('../helpers.js');
 
-const { getUserByEmail } = require('../helpers.js');
-
-const testUsers = {
+const users = {
   "userRandomID": {
     id: "userRandomID", 
     email: "user@example.com", 
@@ -15,10 +15,11 @@ const testUsers = {
   }
 };
 
-describe('getUserByEmail', function() {
+describe('findUserByEmail', function() {
   it('should return a user with valid email', function() {
-    const user = getUserByEmail("user@example.com", users)
+    const user = findUserByEmail("user@example.com", users)
     const expectedOutput = "userRandomID";
     // Write your assert statement here
+    assert.isTrue(user, expectedOutput);
   });
 });
