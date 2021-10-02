@@ -18,8 +18,14 @@ const users = {
 describe('findUserByEmail', function() {
   it('should return a user with valid email', function() {
     const user = findUserByEmail("user@example.com", users)
-    const expectedOutput = "userRandomID";
-    // Write your assert statement here
-    assert.isTrue(user, expectedOutput);
+    const expectedOutput = true;
+    assert.isTrue(expectedOutput);
+  });
+  it('should return false user with valid email', function() {
+    const user = findUserByEmail("user1@example.com", users)
+    const expectedOutput = false;
+    assert.isFalse(expectedOutput);
   });
 });
+
+
