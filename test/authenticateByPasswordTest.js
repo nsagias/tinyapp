@@ -35,20 +35,6 @@ describe('authenticateByPassword', () => {
     assert.strictEqual(expectedOutput, userID);
   });
 });
-  // describe('authenticateByPassword', () => {
-  //   it('should confirm user is added to the userDB by checking email', () => {
-  //     const id = "user3RandomID";
-  //     const name = "user3";
-  //     const email = "user3@example.com";
-  //     const password = "secret";
-  //     newUser(id, name, email, hashedPassword, usersDB);
-  //     findUserByEmail("user3@example.com", userDB);
-  //     authenticateByPassword(email, password, usersDB)
-  //     const expectedOutput = true;
-  //     assert.isTrue(expectedOutput);
-  //     const hashedPassword = bcrypt.hashSync(password, 10);
-  
-  //   // add new userID to session
-   
-  //   });
+ 
+ 
 
