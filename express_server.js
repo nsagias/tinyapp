@@ -267,8 +267,15 @@ app.post("/urls/:shortURL/delete", (req, res) => {
     };
     return res.status(401).redirect('/401');
   }
-  // if logged in get use provided
   const { shortURL } = req.params;
+  if (userId !== urlDatabase[shortURL].userID) {
+    statusCodeError = {
+      '401': 'Unauthorised_Access',
+      message: 'Unauthorised_Access'
+    };
+    return res.status(401).redirect('/401');
+  }
+  // if logged in get use provided
   delete urlDatabase[shortURL];
   res.redirect("/urls");
 });
