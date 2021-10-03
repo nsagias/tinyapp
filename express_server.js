@@ -179,7 +179,7 @@ app.post("/urls", (req, res) => {
   // put new shortURL in database
   urlDatabase[shortURLId] = newURL;
 
-  res.redirect("/urls");
+  res.redirect(`/urls/${shortURLId}`);
 });
 
 
