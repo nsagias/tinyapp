@@ -7,7 +7,7 @@ const uuid = require("uuid");
  * @returns {string} 6 character long string aplhanumeric identifier
  */
 const shortURLGenerator = () => {
-  return uuid.v4().substring(0,6)
+  return uuid.v4().substring(0,6);
 };
 
 /**
@@ -16,7 +16,7 @@ const shortURLGenerator = () => {
  * @returns {string} 8 character long alphanumeric string
  */
 const userId = () => {
-  return uuid.v4().substring(0,8)
+  return uuid.v4().substring(0,8);
 };
 
 
@@ -25,15 +25,15 @@ const userId = () => {
  * used to avoid duplicate user creation
  * - used in: app.post("/register"
  * - used in: app.post("/login"
- * @param {string} userEmail 
- * @param {object} usersDB 
+ * @param {string} userEmail
+ * @param {object} usersDB
  * @returns {boolean or undefined} true if user in database or undefined
  */
 const findUserByEmail = (userEmail, usersDB) => {
   for (let user in usersDB) {
-    if (usersDB[user].email === userEmail) {  
+    if (usersDB[user].email === userEmail) {
       return true;
-    } 
+    }
   }
   return undefined;
 };
@@ -42,11 +42,11 @@ const findUserByEmail = (userEmail, usersDB) => {
 /**
  * Function to used to create a new user
  * - used in: app.post("/register"
- * @param {string} id 
- * @param {string} name 
- * @param {string} email 
- * @param {string} password 
- * @param {object} userDB 
+ * @param {string} id
+ * @param {string} name
+ * @param {string} email
+ * @param {string} password
+ * @param {object} userDB
  * @returns {object} enters the new user into the database "userDB"
  */
 const newUser = (id, name, email, password, userDB) => {
@@ -60,22 +60,22 @@ const newUser = (id, name, email, password, userDB) => {
 
 /**
  * Function authenticate user by user defined password
- * Takes user provide email password and compares synchronisely 
+ * Takes user provide email password and compares synchronisely
  * to password in database
  * - used in: app.post("/login"
- * @param {string} email 
- * @param {string} password 
- * @param {object} usersDB 
+ * @param {string} email
+ * @param {string} password
+ * @param {object} usersDB
  * @returns {string} returns a user ID if authenticated or undefined if not authenticated
  */
 const authenticateByPassword = (email, password, usersDB) => {
   // bcrypt.compareSync(password, hashedPassword);
   for (let user in usersDB) {
-    if( usersDB[user].email  === email ) { 
-         let storedPassword = usersDB[user].password;
-        if(bcrypt.compareSync(password, storedPassword)) {
-          return usersDB[user].id;
-        }
+    if (usersDB[user].email === email) {
+      let storedPassword = usersDB[user].password;
+      if (bcrypt.compareSync(password, storedPassword)) {
+        return usersDB[user].id;
+      }
     }
   }
 };
@@ -83,11 +83,10 @@ const authenticateByPassword = (email, password, usersDB) => {
 /**
  * Function to lookup and return users
  * - user in: app.get("/urls"
- * @param {string} id 
- * @param {object} db 
- * @returns {object} empty object if nothing found or all the urls based on the userID 
+ * @param {string} id
+ * @param {object} db
+ * @returns {object} empty object if nothing found or all the urls based on the userID
  */
-// function takes userId and the urlDatabase
 const urlsForUser = (id, db) => {
   let result = {};
   for (let shortURL in db) {
@@ -96,8 +95,8 @@ const urlsForUser = (id, db) => {
         longURL : db[shortURL].longURL,
         createdAt: db[shortURL].createdAt
       };
-      }
     }
+  }
   return result;
 };
 
