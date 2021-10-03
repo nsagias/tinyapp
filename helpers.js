@@ -25,7 +25,7 @@ const userId = () => {
  * used to avoid duplicate user creation
  * - used in: app.post("/register"
  * - used in: app.post("/login"
- * @param {takes a user email} userEmail 
+ * @param {string} userEmail 
  * @param {takes the database of users} usersDB 
  * @returns true if user in database or undefined
  */
@@ -42,7 +42,7 @@ const findUserByEmail = (userEmail, usersDB) => {
 /**
  * Function to used to create a new user
  * - used in: app.post("/register"
- * @param {takes the an id from userID function} id 
+ * @param {takes a from userID function} id 
  * @param {takes the user defined name} name 
  * @param {takes a user defined email} email 
  * @param {takes a hashedPassword } password 

@@ -83,6 +83,17 @@ app.get('/400', (req, res) => {
   res.render('400', templateVars);
 });
 
+
+// 401 Unauthorized 
+app.get('/401', (req, res) => {
+  let templateVars = { 
+    user: null ,
+    statusCodeError
+  };
+  res.render('401', templateVars);
+});
+
+
 app.get('/403', (req, res) => {
   let templateVars = { 
     user: null ,
@@ -111,7 +122,10 @@ app.get("/urls", (req, res) => {
   const userId = req.session["userID"];
   // return ot login if user not logged in
   if (!userId) {
-    return res.redirect('login');
+    statusCodeError = {'401': 'PLEASE LOGIN'};
+    return res.status(401).redirect('401');
+    // return res.redirect('login');
+
   }
    // get user id from user database
   const user = users[userId];
