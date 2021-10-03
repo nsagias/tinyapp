@@ -274,7 +274,7 @@ app.post("/register", (req, res) => {
   // if user exists return with a 400
   if (isCurrentUser) {
     // return res.status(400).send('400: Already Exists');
-    statusCodeError = {'400': 'User_Already_ExistsS'};
+    statusCodeError = {'400': 'User_Already_Exists'};
     return res.status(400).redirect('400');
   }
 
@@ -284,7 +284,7 @@ app.post("/register", (req, res) => {
   // add new userID to session
   newUser(id, nameT, emailT, hashedPassword, usersDB);
   req.session.userID = userID;
-  res.redirect("urls");
+  return res.redirect("urls");
 });
 
 app.get('/login', (req, res) => {
