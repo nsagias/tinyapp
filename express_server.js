@@ -122,10 +122,8 @@ app.get("/urls", (req, res) => {
   const userId = req.session["userID"];
   // return ot login if user not logged in
   if (!userId) {
-    statusCodeError = {'401': 'PLEASE LOGIN'};
+    statusCodeError = {'401': 'Unauthorised_Access'};
     return res.status(401).redirect('401');
-    // return res.redirect('login');
-
   }
    // get user id from user database
   const user = users[userId];
@@ -144,7 +142,8 @@ app.post("/urls", (req, res) => {
   // get user id from cookie
   const userId = req.session["userID"];
   if (!userId) {
-    return res.redirect('login');
+    statusCodeError = {'401': 'Unauthorised_Access'};
+    return res.status(401).redirect('401');
   }
   // creat new short URL
   const shortURLId = shortURLGenerator();
@@ -172,8 +171,14 @@ app.get("/urls/new", (req, res) => {
   // check if logged in and exit if not logged in
   const userId = req.session["userID"];
   if (!userId) {
-    return res.redirect('/login');
+    statusCodeError = {'401': 'Unauthorised_Access'};
+    return res.status(401).redirect('/401');
   }
+  // 
+  // if (check if belongs) {
+  //   statusCodeError = {'401': 'Unauthorised Access'};
+  //   return res.status(401).redirect('401');
+  // }
   // get user id from user database
   const user = users[userId];
   const templateVars = { user: user };
@@ -186,7 +191,8 @@ app.get("/urls/:shortURL", (req, res) => {
   const userId = req.session["userID"];
   // if no userID redirect to login
   if (!userId) {
-    res.redirect('login');
+    statusCodeError = {'401': 'Unauthorised_Access'};
+    return res.status(401).redirect('/401');
   }
   // get user from user database
   const user = users[userId];
@@ -205,7 +211,8 @@ app.post("/urls/:id", (req, res) => {
   const userId = req.session["userID"];
   // if customer not logged in redirect to user screen
   if (!userId) {
-    return res.redirect('login');
+    statusCodeError = {'401': 'Unauthorised_Access'};
+    return res.status(401).redirect('/401');
   }
   const shortURLId = req.params.id;
   const longURL = req.body.longURL;
@@ -218,7 +225,8 @@ app.post("/urls/:shortURL/delete", (req, res) => {
   // check if user id and logged ing
   const userId = req.session["userID"];
   if (!userId) {
-    return res.redirect('login');
+    statusCodeError = {'401': 'Unauthorised_Access'};
+    return res.status(401).redirect('/401');
   }
   // if logged in get use provided 
   const { shortURL } = req.params;
@@ -230,7 +238,7 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 app.post("/logout", (req, res) => {
   // set session value to null
   req.session = null;
-  res.redirect("/urls");
+  res.redirect("/");
 });
 
 
@@ -256,7 +264,7 @@ app.post("/register", (req, res) => {
 
   // check for emptry strings in  email or password
   if (emailT === '' || passwordT === '' || nameT ==='') {
-    statusCodeError = {'400': 'Missing Email or Password'};
+    statusCodeError = {'400': 'Missing_Email_or_Password'};
     return res.status(400).redirect('400');
   }
 
@@ -266,7 +274,7 @@ app.post("/register", (req, res) => {
   // if user exists return with a 400
   if (isCurrentUser) {
     // return res.status(400).send('400: Already Exists');
-    statusCodeError = {'400': 'User Already Exists!'};
+    statusCodeError = {'400': 'User_Already_ExistsS'};
     return res.status(400).redirect('400');
   }
 
@@ -298,7 +306,7 @@ app.post("/login", (req, res) => {
   const passwordT = password.trim();
 
   if (emailT === '' || passwordT === '') {
-    statusCodeError = {'400': 'No email or password provided'}
+    statusCodeError = {'400': 'Missing_Email_or_Password'}
     return res.status(400).redirect('400');
   }
   // get users from database
@@ -309,7 +317,7 @@ app.post("/login", (req, res) => {
   const isCurrentUser = findUserByEmail(emailT, usersDB);
   // if no user found send 403 and message too register
   if (!isCurrentUser) {
-    statusCodeError = {'403': 'Not User Found!'};
+    statusCodeError = {'403': 'Not_User_Found'};
     return res.status(403).redirect('403');
   }
 
@@ -317,7 +325,7 @@ app.post("/login", (req, res) => {
   const isAuthenticated = authenticateByPassword(emailT, passwordT, usersDB);
   // if password returns false 403 response
   if (!isAuthenticated) {
-    statusCodeError = {'403': 'Password Does Not Match'};
+    statusCodeError = {'403': 'Password_Does_Not_Match'};
     return res.status(403).redirect('403');
   }
 
