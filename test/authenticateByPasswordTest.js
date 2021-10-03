@@ -25,18 +25,18 @@ const userDB = {
 
 describe('authenticateByPassword', () => {
   it('Should return userID if user authenticated', () => {
-    const userID = authenticateByPassword("red@example.com", "red", userDB)
+    const userID = authenticateByPassword("red@example.com", "red", userDB);
     const expectedOutput = "815bd08a";
     assert.strictEqual(expectedOutput, userID);
   });
   it('Should return undefined if not authenticated using wrong password', () => {
-    const userID = authenticateByPassword("red@example.com", "re", userDB)
+    const userID = authenticateByPassword("red@example.com", "re", userDB);
     const expectedOutput = undefined;
     assert.strictEqual(expectedOutput, userID);
   });
   it('should throw an error if Database is empty', () => {
     const expectedOutput = "database is not defined";
-    assert.throws(() => urlsForUser("", database), Error, expectedOutput);
+    assert.throws(() => authenticateByPassword("red@example.com", "red", database), Error, expectedOutput);
   });
  
 });

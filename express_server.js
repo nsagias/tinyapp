@@ -14,6 +14,7 @@ const {
   authenticateByPassword,
   urlsForUser
 } = require('./helpers');
+const moment = require('moment');
 
 app.use(morgan('short'));
 
@@ -53,25 +54,34 @@ let urlDatabase = {
   "b2xVn2": {
     longURL: "http://www.lighthouselabs.ca",
     userID: "1f1ffea1",
+    createdAt: moment().format('MMMM Do YYYY'),
   },
   "9sm5xk": {
     longURL: "http://www.google.com",
     userID: "1f1ffea1",
+    createdAt: moment().format('MMMM Do YYYY'),
   },
   "9sm511": {
     longURL: "http://www.bingo.com",
     userID: "815bd08a",
+    createdAt: moment().format('MMMM Do YYYY'),
   },
   "c2k511": {
     longURL: "http://www.yahoo.com",
     userID: "815bd08a",
+    createdAt: moment().format('MMMM Do YYYY'),
   }
 };
 
 
-
+// route redirects to login
 app.get("/", (req, res) => {
-  res.send("Hello!");
+  const userId = req.session["userID"];
+  // return ot login if user not logged in
+  if (!userId) {
+    return res.redirect('login');
+  }
+  return res.redirect("/urls");
 });
 
 // app.get("/hello", (req, res) => {
@@ -150,8 +160,10 @@ app.get("/urls/:shortURL", (req, res) => {
   const templateVars = {
     user: user,
     shortURL: req.params.shortURL,
-    longURL: urlDatabase[req.params.shortURL].longURL
+    longURL: urlDatabase[req.params.shortURL].longURL,
+    createdAt: moment().format('MMMM Do YYYY'),
   };
+  console.log(templateVars)
   // show single url
   res.render("urls_show", templateVars);
 });
@@ -277,11 +289,6 @@ app.post("/login", (req, res) => {
 });
 
 
-
-// return database in JSON
-// app.get("/urls.json", (req, res) => {
-//   res.json(urlDatabase);
-// });
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
