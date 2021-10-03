@@ -6,8 +6,8 @@ const cookieSession = require('cookie-session');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-const { 
-  users, 
+const {
+  users,
   urlDatabase
 } = require('./databases');
 const {
@@ -40,8 +40,8 @@ app.set("view engine", "ejs");
  */
 let statusCodeError = {};
 app.get('/400', (req, res) => {
-  let templateVars = { 
-    user: null ,
+  let templateVars = {
+    user: null,
     statusCodeError
   };
   res.render('400', templateVars);
@@ -53,8 +53,8 @@ app.get('/400', (req, res) => {
  * GET /401
  */
 app.get('/401', (req, res) => {
-  let templateVars = { 
-    user: null ,
+  let templateVars = {
+    user: null,
     statusCodeError
   };
   res.render('401', templateVars);
@@ -65,8 +65,8 @@ app.get('/401', (req, res) => {
  * GET /403
  */
 app.get('/403', (req, res) => {
-  let templateVars = { 
-    user: null ,
+  let templateVars = {
+    user: null,
     statusCodeError
   };
   res.render('403', templateVars);
@@ -104,9 +104,9 @@ app.get("/urls", (req, res) => {
     };
     return res.status(401).redirect('401');
   }
-   // get user id from user database
+  // get user id from user database
   const user = users[userId];
-  // get urs for the user 
+  // get urs for the user
   let userURLs = urlsForUser(userId, urlDatabase);
   // add urls to templateVvars with user id
   const templateVars = {
@@ -164,7 +164,7 @@ app.get("/u/:shortURL", (req, res) => {
 
 
 /**
- * Display create new user form 
+ * Display create new user form
  * GET /urls/new
  */
 app.get("/urls/new", (req, res) => {
@@ -206,7 +206,6 @@ app.get("/urls/:shortURL", (req, res) => {
     };
     return res.status(401).redirect('/401');
   }
- 
   // get user from user database
   const user = users[userId];
   const templateVars = {
@@ -226,7 +225,7 @@ app.get("/urls/:shortURL", (req, res) => {
  * Redirects tor GET/urls
  */
 app.post("/urls/:id", (req, res) => {
-  // get userID from session 
+  // get userID from session
   const userId = req.session["userID"];
   // if customer not logged in redirect to user screen
   if (!userId) {
@@ -268,7 +267,7 @@ app.post("/urls/:shortURL/delete", (req, res) => {
     };
     return res.status(401).redirect('/401');
   }
-  // if logged in get use provided 
+  // if logged in get use provided
   const { shortURL } = req.params;
   delete urlDatabase[shortURL];
   res.redirect("/urls");
@@ -290,7 +289,7 @@ app.post("/logout", (req, res) => {
 
 
 /**
- * Register 
+ * Register
  * GET /register
  * Shows registration screen
  */
@@ -301,9 +300,9 @@ app.get("/register", (req, res) => {
 
 
 /**
- * Register 
+ * Register
  * POST /register
- * Redirects GET/urls 
+ * Redirects GET/urls
  */
 app.post("/register", (req, res) => {
   // generate a new ID for user
@@ -319,7 +318,7 @@ app.post("/register", (req, res) => {
 
 
   // check for emptry strings in  email or password
-  if (emailT === '' || passwordT === '' || nameT ==='') {
+  if (emailT === '' || passwordT === '' || nameT === '') {
     statusCodeError = {
       '400': 'Missing_Email_or_Password',
       message: 'Please Enter Email Or Password'
@@ -333,7 +332,7 @@ app.post("/register", (req, res) => {
   // if user exists return with a 400
   if (isCurrentUser) {
     // return res.status(400).send('400: Already Exists');
-    statusCodeError = {'400': 'User_Already_Exists'};
+    statusCodeError = { '400': 'User_Already_Exists' };
     return res.status(400).redirect('400');
   }
   // create a hashedPassword
@@ -347,7 +346,7 @@ app.post("/register", (req, res) => {
 
 
 /**
- * Login 
+ * Login
  * GET /login
  * Renders the login form
  */
@@ -359,7 +358,7 @@ app.get('/login', (req, res) => {
 
 
 /**
- * Login 
+ * Login
  * POST /login
  * Redirects to GET /urls
  */
