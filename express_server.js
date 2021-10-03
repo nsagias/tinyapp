@@ -69,7 +69,7 @@ let urlDatabase = {
   "c2k511": {
     longURL: "http://www.yahoo.com",
     userID: "815bd08a",
-    createdAt: moment().format('MMMM Do YYYY'),
+    createdAt: moment().format('MMMM Do YYYY')
   }
 };
 
@@ -103,11 +103,12 @@ app.get("/urls", (req, res) => {
   // add urls to templateVvars with user id
   const templateVars = {
     user: user,
-    urls: userURLs
+    urls: userURLs,
   };
   res.render('urls_index', templateVars);
 });
 
+// route to create new short URL
 app.post("/urls", (req, res) => {
   // get user id from cookie
   const userId = req.session["userID"];
@@ -121,7 +122,8 @@ app.post("/urls", (req, res) => {
   // create new url
   let newURL = {
     longURL: req.body.longURL,
-    userID: user.id
+    userID: user.id,
+    createdAt: moment().format('MMMM Do YYYY'),
   };
   // put new shortURL in database
   urlDatabase[shortURLId] = newURL;
@@ -161,9 +163,8 @@ app.get("/urls/:shortURL", (req, res) => {
     user: user,
     shortURL: req.params.shortURL,
     longURL: urlDatabase[req.params.shortURL].longURL,
-    createdAt: moment().format('MMMM Do YYYY'),
+    createdAt: urlDatabase[req.params.shortURL].createdAt,
   };
-  console.log(templateVars)
   // show single url
   res.render("urls_show", templateVars);
 });
@@ -178,6 +179,7 @@ app.post("/urls/:id", (req, res) => {
   const shortURLId = req.params.id;
   const longURL = req.body.longURL;
   urlDatabase[shortURLId].longURL = longURL;
+  urlDatabase[shortURLId].createdAt = moment().format('MMMM Do YYYY'),
   res.redirect("/urls");
 });
 
