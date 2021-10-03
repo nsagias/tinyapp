@@ -198,11 +198,14 @@ app.get("/urls/:shortURL", (req, res) => {
     };
     return res.status(401).redirect('/401');
   }
-  // 
-  // if (check if belongs) {
-  //   statusCodeError = {'401': 'Unauthorised Access'};
-  //   return res.status(401).redirect('401');
-  // }
+  const shortURLId = req.params.shortURL;
+  if (userId !== urlDatabase[shortURLId].userID) {
+    statusCodeError = {
+      '401': 'Unauthorised_Access',
+      message: 'Unauthorised_Access'
+    };
+    return res.status(401).redirect('/401');
+  }
  
   // get user from user database
   const user = users[userId];
@@ -234,6 +237,14 @@ app.post("/urls/:id", (req, res) => {
     return res.status(401).redirect('/401');
   }
   const shortURLId = req.params.id;
+  if (userId !== urlDatabase[shortURLId].userID) {
+    statusCodeError = {
+      '401': 'Unauthorised_Access',
+      message: 'Unauthorised_Access'
+    };
+    return res.status(401).redirect('/401');
+  }
+
   const longURL = req.body.longURL;
   urlDatabase[shortURLId].longURL = longURL;
   urlDatabase[shortURLId].createdAt = moment().format('MMMM Do YYYY'),
