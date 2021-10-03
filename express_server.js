@@ -98,7 +98,10 @@ app.get("/urls", (req, res) => {
   const userId = req.session["userID"];
   // return ot login if user not logged in
   if (!userId) {
-    statusCodeError = {'401': 'Unauthorised_Access'};
+    statusCodeError = {
+      '401': 'Unauthorised_Access',
+      message: 'Please Login'
+    };
     return res.status(401).redirect('401');
   }
    // get user id from user database
@@ -124,7 +127,10 @@ app.post("/urls", (req, res) => {
   // get user id from cookie
   const userId = req.session["userID"];
   if (!userId) {
-    statusCodeError = {'401': 'Unauthorised_Access'};
+    statusCodeError = {
+      '401': 'Unauthorised_Access',
+      message: 'Please Login'
+    };
     return res.status(401).redirect('401');
   }
   // creat new short URL
@@ -165,7 +171,10 @@ app.get("/urls/new", (req, res) => {
   // check if logged in and exit if not logged in
   const userId = req.session["userID"];
   if (!userId) {
-    statusCodeError = {'401': 'Unauthorised_Access'};
+    statusCodeError = {
+      '401': 'Unauthorised_Access',
+      message: 'Please Login'
+    };
     return res.status(401).redirect('/401');
   }
   const user = users[userId];
@@ -183,7 +192,10 @@ app.get("/urls/:shortURL", (req, res) => {
   const userId = req.session["userID"];
   // if no userID redirect to login
   if (!userId) {
-    statusCodeError = {'401': 'Unauthorised_Access'};
+    statusCodeError = {
+      '401': 'Unauthorised_Access',
+      message: 'Please Login'
+    };
     return res.status(401).redirect('/401');
   }
   // 
@@ -215,7 +227,10 @@ app.post("/urls/:id", (req, res) => {
   const userId = req.session["userID"];
   // if customer not logged in redirect to user screen
   if (!userId) {
-    statusCodeError = {'401': 'Unauthorised_Access'};
+    statusCodeError = {
+      '401': 'Unauthorised_Access',
+      message: 'Please Login'
+    };
     return res.status(401).redirect('/401');
   }
   const shortURLId = req.params.id;
@@ -233,10 +248,13 @@ app.post("/urls/:id", (req, res) => {
  * Redirects to /GET/urls
  */
 app.post("/urls/:shortURL/delete", (req, res) => {
-  // check if user id and logged ing
+  // check if user id and logged in
   const userId = req.session["userID"];
   if (!userId) {
-    statusCodeError = {'401': 'Unauthorised_Access'};
+    statusCodeError = {
+      '401': 'Unauthorised_Access',
+      message: 'Please Login'
+    };
     return res.status(401).redirect('/401');
   }
   // if logged in get use provided 
@@ -291,7 +309,10 @@ app.post("/register", (req, res) => {
 
   // check for emptry strings in  email or password
   if (emailT === '' || passwordT === '' || nameT ==='') {
-    statusCodeError = {'400': 'Missing_Email_or_Password'};
+    statusCodeError = {
+      '400': 'Missing_Email_or_Password',
+      message: 'Please Enter Email Or Password'
+    };
     return res.status(400).redirect('400');
   }
 
@@ -341,7 +362,10 @@ app.post("/login", (req, res) => {
   const passwordT = password.trim();
 
   if (emailT === '' || passwordT === '') {
-    statusCodeError = {'400': 'Missing_Email_or_Password'}
+    statusCodeError = {
+      '400': 'Missing_Email_Or_Password',
+      message: 'Please Enter Email Or Password'
+    };
     return res.status(400).redirect('400');
   }
   // get users from database
@@ -352,7 +376,10 @@ app.post("/login", (req, res) => {
   const isCurrentUser = findUserByEmail(emailT, usersDB);
   // if no user found send 403 and message too register
   if (!isCurrentUser) {
-    statusCodeError = {'403': 'Not_User_Found'};
+    statusCodeError = {
+      '403': 'Not_User_Found',
+      message: 'Please Create Account'
+    };
     return res.status(403).redirect('403');
   }
 
@@ -360,7 +387,10 @@ app.post("/login", (req, res) => {
   const isAuthenticated = authenticateByPassword(emailT, passwordT, usersDB);
   // if password returns false 403 response
   if (!isAuthenticated) {
-    statusCodeError = {'403': 'Password_Does_Not_Match'};
+    statusCodeError = {
+      '403': 'Password_Does_Not_Match',
+      message: 'Password or login id does not match'
+    };
     return res.status(403).redirect('403');
   }
   // add id to to session for valid user
