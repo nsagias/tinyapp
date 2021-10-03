@@ -49,12 +49,19 @@ let urlDatabase = {
 };
 
 
-describe('urlsForUser', () => {
+describe('urlsForUser', () => { 
   it('should return user 815bd08a\'s short urls', () => {
+    const today = moment().format('MMMM Do YYYY');
     const output = urlsForUser("815bd08a", urlDatabase);
     const expectedOutput = {
-      '9sm511': { longURL: 'http://www.bingo.com' },
-      c2k511: { longURL: 'http://www.yahoo.com' }
+      '9sm511': { 
+        longURL: 'http://www.bingo.com',
+        createdAt: today
+      },
+      c2k511: { 
+        longURL: 'http://www.yahoo.com',
+        createdAt: today
+      },
     };
     assert.deepEqual(output, expectedOutput);
   });
