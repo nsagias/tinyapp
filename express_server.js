@@ -73,7 +73,10 @@ let urlDatabase = {
   }
 };
 
-// set 400 and 403 error pages
+/**
+ * 400 Error Route
+ * GET /400
+ */
 let statusCodeError = {};
 app.get('/400', (req, res) => {
   let templateVars = { 
@@ -84,7 +87,10 @@ app.get('/400', (req, res) => {
 });
 
 
-// 401 Unauthorized 
+/**
+ * 401 Error Route
+ * GET /401
+ */
 app.get('/401', (req, res) => {
   let templateVars = { 
     user: null ,
@@ -93,7 +99,10 @@ app.get('/401', (req, res) => {
   res.render('401', templateVars);
 });
 
-
+/**
+ * 403 Error Route
+ * GET /403
+ */
 app.get('/403', (req, res) => {
   let templateVars = { 
     user: null ,
@@ -102,7 +111,13 @@ app.get('/403', (req, res) => {
   res.render('403', templateVars);
 });
 
-// route redirects to login
+
+
+/**
+ * Home route
+ * GET /
+ * Redirects to GET /login or GET /urls
+ */
 app.get("/", (req, res) => {
   const userId = req.session["userID"];
   // return ot login if user not logged in
@@ -112,9 +127,9 @@ app.get("/", (req, res) => {
   return res.redirect("/urls");
 });
 
-app.get("/hello", (req, res) => {
-  res.send("<html><body>Hello <b>World</b></body></html>");
-});
+// app.get("/hello", (req, res) => {
+//   res.send("<html><body>Hello <b>World</b></body></html>");
+// });
 
 
 app.get("/urls", (req, res) => {
@@ -137,7 +152,13 @@ app.get("/urls", (req, res) => {
   res.render('urls_index', templateVars);
 });
 
-// route to create new short URL
+
+
+/**
+ * Create new short url
+ * POST /urls
+ * Redirect to GET /urls
+ */
 app.post("/urls", (req, res) => {
   // get user id from cookie
   const userId = req.session["userID"];
@@ -161,15 +182,45 @@ app.post("/urls", (req, res) => {
   res.redirect("/urls");
 });
 
+
+/**
+ * Show url
+ * GET /u/:id
+ * Retrieves long url from database
+ * Redirects to long url website
+ */
 app.get("/u/:shortURL", (req, res) => {
   // receives a shoten url from an anonymous user
   const longURL = urlDatabase[req.params.shortURL].longURL;
   res.redirect(longURL);
 });
 
+
+/**
+ * Display create new user form 
+ * GET /urls/new
+ */
 app.get("/urls/new", (req, res) => {
   // check if logged in and exit if not logged in
   const userId = req.session["userID"];
+  if (!userId) {
+    statusCodeError = {'401': 'Unauthorised_Access'};
+    return res.status(401).redirect('/401');
+  }
+  const user = users[userId];
+  const templateVars = { user: user };
+  // show the create new URL screen
+  res.render("urls_new", templateVars);
+});
+
+/**
+ * Display urls created by authenticated user
+ * GET/urls/:id
+ */
+app.get("/urls/:shortURL", (req, res) => {
+  // get user id from session
+  const userId = req.session["userID"];
+  // if no userID redirect to login
   if (!userId) {
     statusCodeError = {'401': 'Unauthorised_Access'};
     return res.status(401).redirect('/401');
@@ -179,21 +230,7 @@ app.get("/urls/new", (req, res) => {
   //   statusCodeError = {'401': 'Unauthorised Access'};
   //   return res.status(401).redirect('401');
   // }
-  // get user id from user database
-  const user = users[userId];
-  const templateVars = { user: user };
-  // show the create new URL screen
-  res.render("urls_new", templateVars);
-});
-
-app.get("/urls/:shortURL", (req, res) => {
-  // get user id from session
-  const userId = req.session["userID"];
-  // if no userID redirect to login
-  if (!userId) {
-    statusCodeError = {'401': 'Unauthorised_Access'};
-    return res.status(401).redirect('/401');
-  }
+ 
   // get user from user database
   const user = users[userId];
   const templateVars = {
@@ -206,6 +243,12 @@ app.get("/urls/:shortURL", (req, res) => {
   res.render("urls_show", templateVars);
 });
 
+
+/**
+ * Create new short URL
+ * POST/url/:id
+ * Redirects tor GET/urls
+ */
 app.post("/urls/:id", (req, res) => {
   // get userID from session 
   const userId = req.session["userID"];
@@ -221,6 +264,13 @@ app.post("/urls/:id", (req, res) => {
   res.redirect("/urls");
 });
 
+
+
+/**
+ * Delete short url from database
+ * POST/urls/:id/delete
+ * Redirects to /GET/urls
+ */
 app.post("/urls/:shortURL/delete", (req, res) => {
   // check if user id and logged ing
   const userId = req.session["userID"];
@@ -235,6 +285,13 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 });
 
 
+
+/**
+ * Logout
+ * POST /logout
+ * Clears session values
+ * Redirects to root /GET/
+ */
 app.post("/logout", (req, res) => {
   // set session value to null
   req.session = null;
@@ -242,13 +299,22 @@ app.post("/logout", (req, res) => {
 });
 
 
+/**
+ * Register 
+ * GET /register
+ * Shows registration screen
+ */
 app.get("/register", (req, res) => {
-  // show registration screen
   const templateVars = { user: null };
   res.render("register", templateVars);
 });
 
 
+/**
+ * Register 
+ * POST /register
+ * Redirects GET/urls 
+ */
 app.post("/register", (req, res) => {
   // generate a new ID for user
   const id = userId();
@@ -257,7 +323,7 @@ app.post("/register", (req, res) => {
   const { name, email, password } = req.body;
   // trim password and email
   // avoid duplicated and getting around check
-  const nameT = name.trim()
+  const nameT = name.trim();
   const emailT = email.trim();
   const passwordT = password.trim();
 
@@ -277,7 +343,6 @@ app.post("/register", (req, res) => {
     statusCodeError = {'400': 'User_Already_Exists'};
     return res.status(400).redirect('400');
   }
-
   // create a hashedPassword
   const hashedPassword = bcrypt.hashSync(passwordT, 10);
 
@@ -287,6 +352,12 @@ app.post("/register", (req, res) => {
   return res.redirect("urls");
 });
 
+
+/**
+ * Login 
+ * GET /login
+ * Renders the login form
+ */
 app.get('/login', (req, res) => {
   // get login page/form
   const templateVars = { user: null };
@@ -294,8 +365,11 @@ app.get('/login', (req, res) => {
 });
 
 
-
-
+/**
+ * Login 
+ * POST /login
+ * Redirects to GET /urls
+ */
 app.post("/login", (req, res) => {
   const { email, password } = req.body;
   // check if email or password are empty strings
@@ -328,7 +402,6 @@ app.post("/login", (req, res) => {
     statusCodeError = {'403': 'Password_Does_Not_Match'};
     return res.status(403).redirect('403');
   }
-
   // add id to to session for valid user
   const userID = isAuthenticated;
   req.session.userID = userID;
@@ -337,8 +410,10 @@ app.post("/login", (req, res) => {
   res.redirect("urls");
 });
 
-
-
+/**
+ * Create server
+ * listens on PORT
+ */
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
 });
