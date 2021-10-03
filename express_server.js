@@ -73,6 +73,23 @@ let urlDatabase = {
   }
 };
 
+// set 400 and 403 error pages
+let statusCodeError = {};
+app.get('/400', (req, res) => {
+  let templateVars = { 
+    user: null ,
+    statusCodeError
+  };
+  res.render('400', templateVars);
+});
+
+app.get('/403', (req, res) => {
+  let templateVars = { 
+    user: null ,
+    statusCodeError
+  };
+  res.render('403', templateVars);
+});
 
 // route redirects to login
 app.get("/", (req, res) => {
@@ -84,9 +101,9 @@ app.get("/", (req, res) => {
   return res.redirect("/urls");
 });
 
-// app.get("/hello", (req, res) => {
-//   res.send("<html><body>Hello <b>World</b></body></html>");
-// });
+app.get("/hello", (req, res) => {
+  res.send("<html><body>Hello <b>World</b></body></html>");
+});
 
 
 app.get("/urls", (req, res) => {
@@ -225,7 +242,8 @@ app.post("/register", (req, res) => {
 
   // check for emptry strings in  email or password
   if (emailT === '' || passwordT === '' || nameT ==='') {
-    return res.status(400).send('400: Missing Email or Password ');
+    statusCodeError = {'400': 'Missing Email or Password'};
+    return res.status(400).redirect('400');
   }
 
   // check if is a current user
@@ -233,7 +251,9 @@ app.post("/register", (req, res) => {
   const isCurrentUser = findUserByEmail(emailT, usersDB);
   // if user exists return with a 400
   if (isCurrentUser) {
-    return res.status(400).send('400: Already Exists');
+    // return res.status(400).send('400: Already Exists');
+    statusCodeError = {'400': 'User Already Exists!'};
+    return res.status(400).redirect('400');
   }
 
   // create a hashedPassword
@@ -252,6 +272,8 @@ app.get('/login', (req, res) => {
 });
 
 
+
+
 app.post("/login", (req, res) => {
   const { email, password } = req.body;
   // check if email or password are empty strings
@@ -262,7 +284,8 @@ app.post("/login", (req, res) => {
   const passwordT = password.trim();
 
   if (emailT === '' || passwordT === '') {
-    return res.status(400).send('400: Missing Email or Password ');
+    statusCodeError = {'400': 'No email or password provided'}
+    return res.status(400).redirect('400');
   }
   // get users from database
   const usersDB = users;
@@ -272,14 +295,16 @@ app.post("/login", (req, res) => {
   const isCurrentUser = findUserByEmail(emailT, usersDB);
   // if no user found send 403 and message too register
   if (!isCurrentUser) {
-    return res.status(403).send('403: No User Found Please Register');
+    statusCodeError = {'403': 'Not User Found!'};
+    return res.status(403).redirect('403');
   }
 
   // Authenticale user returns user id
   const isAuthenticated = authenticateByPassword(emailT, passwordT, usersDB);
   // if password returns false 403 response
   if (!isAuthenticated) {
-    return res.status(403).send('403: Password Does Not Match');
+    statusCodeError = {'403': 'Password Does Not Match'};
+    return res.status(403).redirect('403');
   }
 
   // add id to to session for valid user
