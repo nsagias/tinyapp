@@ -9,7 +9,7 @@ const bodyParser = require('body-parser');
 const {
   users,
   urlDatabase
-} = require('./databases');
+} = require('./helperFunctions/databases');
 const {
   shortURLGenerator,
   userId,
@@ -17,7 +17,7 @@ const {
   newUser,
   authenticateByPassword,
   urlsForUser
-} = require('./helpers');
+} = require('./helperFunctions/helpers');
 const moment = require('moment');
 
 app.use(morgan('short'));
