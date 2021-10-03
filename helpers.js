@@ -93,7 +93,9 @@ const urlsForUser = (id, db) => {
   for (let shortURL in db) {
     if (db[shortURL].userID === id) {
       result[shortURL] = {
-        longURL : db[shortURL].longURL};
+        longURL : db[shortURL].longURL,
+        createdAt: db[shortURL].createdAt
+      };
       }
     }
   return result;
