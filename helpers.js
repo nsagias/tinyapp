@@ -7,7 +7,7 @@ const uuid = require("uuid");
  * @returns {string} 6 character long string aplhanumeric identifier
  */
 const shortURLGenerator = () => {
-  return uuid.v4().substring(0,6);
+  return uuid.v4().substring(0, 6);
 };
 
 /**
@@ -16,7 +16,7 @@ const shortURLGenerator = () => {
  * @returns {string} 8 character long alphanumeric string
  */
 const userId = () => {
-  return uuid.v4().substring(0,8);
+  return uuid.v4().substring(0, 8);
 };
 
 
@@ -51,7 +51,7 @@ const findUserByEmail = (userEmail, usersDB) => {
  */
 const newUser = (id, name, email, password, userDB) => {
   return userDB[id] = {
-    id:  id,
+    id: id,
     name: name,
     email: email,
     password: password
@@ -92,7 +92,7 @@ const urlsForUser = (id, db) => {
   for (let shortURL in db) {
     if (db[shortURL].userID === id) {
       result[shortURL] = {
-        longURL : db[shortURL].longURL,
+        longURL: db[shortURL].longURL,
         createdAt: db[shortURL].createdAt
       };
     }
