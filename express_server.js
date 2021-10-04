@@ -34,10 +34,10 @@ app.set("view engine", "ejs");
 
 
 
-/**
+/**************************************
  * 400 Error Route
  * GET /400
- */
+ **************************************/
 let statusCodeError = {};
 app.get('/400', (req, res) => {
   let templateVars = {
@@ -48,10 +48,10 @@ app.get('/400', (req, res) => {
 });
 
 
-/**
+/**************************************
  * 401 Error Route
  * GET /401
- */
+**************************************/
 app.get('/401', (req, res) => {
   let templateVars = {
     user: null,
@@ -60,10 +60,11 @@ app.get('/401', (req, res) => {
   res.render('401', templateVars);
 });
 
-/**
+
+/**************************************
  * 403 Error Route
  * GET /403
- */
+ **************************************/
 app.get('/403', (req, res) => {
   let templateVars = {
     user: null,
@@ -74,11 +75,11 @@ app.get('/403', (req, res) => {
 
 
 
-/**
+/**************************************
  * Home route
  * GET /
  * Redirects to GET /login or GET /urls
- */
+ **************************************/
 app.get("/", (req, res) => {
   const userId = req.session["userID"];
   // return ot login if user not logged in
@@ -88,11 +89,11 @@ app.get("/", (req, res) => {
   return res.redirect("/urls");
 });
 
-// app.get("/hello", (req, res) => {
-//   res.send("<html><body>Hello <b>World</b></body></html>");
-// });
 
-
+/***************************************
+ * Displays URLs for authenticated user
+ * GET /urls
+ ***************************************/
 app.get("/urls", (req, res) => {
   // get userID from session and check
   const userId = req.session["userID"];
@@ -118,11 +119,11 @@ app.get("/urls", (req, res) => {
 
 
 
-/**
+/***************************************
  * Create new short url
  * POST /urls
  * Redirect to GET /urls
- */
+ ***************************************/
 app.post("/urls", (req, res) => {
   // get user id from cookie
   const userId = req.session["userID"];
@@ -150,12 +151,12 @@ app.post("/urls", (req, res) => {
 });
 
 
-/**
+/***************************************
  * Show url
  * GET /u/:id
  * Retrieves long url from database
  * Redirects to long url website
- */
+ ***************************************/
 app.get("/u/:shortURL", (req, res) => {
   // receives a shoten url from an anonymous user
   const longURL = urlDatabase[req.params.shortURL].longURL;
@@ -163,10 +164,10 @@ app.get("/u/:shortURL", (req, res) => {
 });
 
 
-/**
+/***************************************
  * Display create new user form
  * GET /urls/new
- */
+ ***************************************/
 app.get("/urls/new", (req, res) => {
   // check if logged in and exit if not logged in
   const userId = req.session["userID"];
@@ -183,10 +184,11 @@ app.get("/urls/new", (req, res) => {
   res.render("urls_new", templateVars);
 });
 
-/**
- * Display urls created by authenticated user
+/***************************************
+ * Display  a specif short urls created,
+ * by authenticated user
  * GET/urls/:id
- */
+ ***************************************/
 app.get("/urls/:shortURL", (req, res) => {
   // get user id from session
   const userId = req.session["userID"];
@@ -219,11 +221,11 @@ app.get("/urls/:shortURL", (req, res) => {
 });
 
 
-/**
+/***************************************
  * Create new short URL
  * POST/url/:id
  * Redirects tor GET/urls
- */
+ ***************************************/
 app.post("/urls/:id", (req, res) => {
   // get userID from session
   const userId = req.session["userID"];
@@ -252,11 +254,11 @@ app.post("/urls/:id", (req, res) => {
 
 
 
-/**
+/***************************************
  * Delete short url from database
  * POST/urls/:id/delete
  * Redirects to /GET/urls
- */
+ ****************************************/
 app.post("/urls/:shortURL/delete", (req, res) => {
   // check if user id and logged in
   const userId = req.session["userID"];
@@ -282,12 +284,12 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 
 
 
-/**
+/***************************************
  * Logout
  * POST /logout
  * Clears session values
  * Redirects to root /GET/
- */
+ ***************************************/
 app.post("/logout", (req, res) => {
   // set session value to null
   req.session = null;
@@ -295,22 +297,22 @@ app.post("/logout", (req, res) => {
 });
 
 
-/**
+/***************************************
  * Register
  * GET /register
  * Shows registration screen
- */
+ ***************************************/
 app.get("/register", (req, res) => {
   const templateVars = { user: null };
   res.render("register", templateVars);
 });
 
 
-/**
+/***************************************
  * Register
  * POST /register
  * Redirects GET/urls
- */
+ ***************************************/
 app.post("/register", (req, res) => {
   // generate a new ID for user
   const id = userId();
@@ -322,8 +324,6 @@ app.post("/register", (req, res) => {
   const nameT = name.trim();
   const emailT = email.trim();
   const passwordT = password.trim();
-
-
   // check for emptry strings in  email or password
   if (emailT === '' || passwordT === '' || nameT === '') {
     statusCodeError = {
@@ -352,11 +352,11 @@ app.post("/register", (req, res) => {
 });
 
 
-/**
+/***************************************
  * Login
  * GET /login
  * Renders the login form
- */
+ ***************************************/
 app.get('/login', (req, res) => {
   // get login page/form
   const templateVars = { user: null };
@@ -364,11 +364,11 @@ app.get('/login', (req, res) => {
 });
 
 
-/**
+/***************************************
  * Login
  * POST /login
  * Redirects to GET /urls
- */
+ ***************************************/
 app.post("/login", (req, res) => {
   const { email, password } = req.body;
   // check if email or password are empty strings
@@ -418,10 +418,10 @@ app.post("/login", (req, res) => {
   res.redirect("urls");
 });
 
-/**
+/***************************************
  * Create server
  * listens on PORT
- */
+ ***************************************/
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
 });
